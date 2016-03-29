@@ -67,7 +67,7 @@
         android:background="#FFF"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:paddingTop="50dp"></RelativeLayout>
+        android:paddingTop="10dp"></RelativeLayout>
     <!-- 右侧滑动栏 -->
 
     <RelativeLayout

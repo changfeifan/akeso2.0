@@ -13,4 +13,5 @@
     app:pstsShouldExpand="true"
     app:pstsTabPaddingLeftRight="10dp"
     tools:background="#A333"
+    app:pstsTabTextColor="@color/white"
     />
