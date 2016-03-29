@@ -3,23 +3,36 @@ package com.akeso.akeso20;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akeso.akeso20.fragment.RecyclerViewFragment;
+import com.github.florent37.materialviewpager.MaterialViewPager;
+import com.github.florent37.materialviewpager.header.HeaderDesign;
+
 /**
  * Created by changfeifan on 16/3/28.
  */
-public class DrawerActivity extends Activity implements View.OnClickListener, View.OnTouchListener {
-    private Button mLeftMenuBtn;
-    private Button mRightMenuBtn;
+public class DrawerActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
+    private ImageView iv_mLeftMenu;
+    private ImageView iv_mRightMenu;
     private DrawerLayout mDrawerLayout;
     private RelativeLayout leftMenulayout;
     private RelativeLayout rightMessagelayout;
+    private MaterialViewPager mViewPager;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private Toolbar toolbar;
 
     public static void show(Activity activity) {
         Intent intent = new Intent(activity, DrawerActivity.class);
@@ -29,24 +42,114 @@ public class DrawerActivity extends Activity implements View.OnClickListener, Vi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_drawer);
 
-        mLeftMenuBtn = (Button) findViewById(R.id.id_left_openBtn);
-        mRightMenuBtn = (Button) findViewById(R.id.id_right_openBtn);
+        setTitle("");
+
+        iv_mLeftMenu = (ImageView) findViewById(R.id.id_left_openBtn);
+        iv_mRightMenu = (ImageView) findViewById(R.id.id_right_openBtn);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         mDrawerLayout.setScrimColor(0xaf000000);
+
+        mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, 0, 0);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        toolbar = mViewPager.getToolbar();
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayUseLogoEnabled(false);
+            actionBar.setHomeButtonEnabled(true);
+
+        }
+
+        mViewPager.getViewPager().setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+
+            @Override
+            public Fragment getItem(int position) {
+                switch (position % 4) {
+                    //case 0:
+                    //    return RecyclerViewFragment.newInstance();
+                    //case 1:
+                    //    return RecyclerViewFragment.newInstance();
+                    //case 2:
+                    //    return WebViewFragment.newInstance();
+                    default:
+                        return RecyclerViewFragment.newInstance();
+                }
+            }
+
+            @Override
+            public int getCount() {
+                return 3;
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                switch (position % 3) {
+                    case 0:
+                        return "视觉负担";
+                    case 1:
+                        return "视觉环境";
+                    case 2:
+                        return "视觉习惯";
+//                    case 3:
+//                        return "Divertissement";
+                }
+                return "";
+            }
+        });
+
+        mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
+            @Override
+            public HeaderDesign getHeaderDesign(int page) {
+                switch (page) {
+                    case 0:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.blue,
+                                "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg");
+                    case 1:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.blue_light,
+                                "https://fs01.androidpit.info/a/63/0e/android-l-wallpapers-630ea6-h900.jpg");
+                    case 2:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.blue,
+                                "http://www.droid-life.com/wp-content/uploads/2014/10/lollipop-wallpapers10.jpg");
+//                    case 3:
+//                        return HeaderDesign.fromColorResAndUrl(
+//                                R.color.red,
+//                                "http://www.tothemobile.com/wp-content/uploads/2014/07/original.jpg");
+                }
+
+                //execute others actions if needed (ex : modify your header logo)
+
+                return null;
+            }
+        });
+
+        mViewPager.getViewPager().setOffscreenPageLimit(mViewPager.getViewPager().getAdapter().getCount());
+        mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
+
 
         initEvent();
         initLeftLayout();
         initRightLayout();
 
-        mLeftMenuBtn.setOnClickListener(this);
-        mRightMenuBtn.setOnClickListener(this);
+        iv_mLeftMenu.setOnClickListener(this);
+        iv_mRightMenu.setOnClickListener(this);
 
         leftMenulayout.setOnTouchListener(this);
         rightMessagelayout.setOnTouchListener(this);
+
+
     }
 
     public void initLeftLayout() {
