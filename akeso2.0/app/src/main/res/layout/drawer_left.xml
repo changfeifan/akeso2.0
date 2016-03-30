@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="15dp">
+        android:padding="18dp">
 
         <ImageView
             android:layout_width="20dp"
@@ -33,10 +33,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_file"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="15dp">
+        android:padding="18dp">
 
         <ImageView
             android:layout_width="20dp"
@@ -52,10 +53,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_about"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="15dp">
+        android:padding="18dp">
 
         <ImageView
             android:layout_width="20dp"
@@ -74,7 +76,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="15dp">
+        android:padding="18dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/date" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:text="预约验光"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_help"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="18dp">
 
         <ImageView
             android:layout_width="20dp"

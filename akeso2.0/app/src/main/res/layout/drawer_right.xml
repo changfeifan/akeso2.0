@@ -18,8 +18,7 @@
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_margin="5dp"
-            android:padding="10dp"
-            android:src="@drawable/person" />
+            android:src="@drawable/ic_right" />
 
         <TextView
             android:id="@+id/tv_name"
@@ -38,6 +37,7 @@
             android:layout_below="@+id/tv_name"
             android:layout_marginTop="3dp"
             android:text="上次同步时间  今天 上午2:31"
+            android:textColor="@color/text_gray"
             android:textSize="11dp" />
 
         <LinearLayout
@@ -51,12 +51,14 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/low_energy" />
+                android:src="@drawable/state_low_energy" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:text="电池：大约4小时"
+                android:textColor="@color/black"
                 android:textSize="11dp" />
         </LinearLayout>
     </RelativeLayout>
@@ -64,23 +66,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_below="@+id/rl_background_top"
+        android:orientation="horizontal"
         android:padding="13dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="眨眼提醒"
-            android:textSize="15dp"/>
+            android:textColor="@color/black"
+            android:textSize="15dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="点击设置"
             android:gravity="right"
-            android:textSize="13dp"
-            />
+            android:text="点击设置"
+            android:textColor="@color/black"
+            android:textSize="13dp" />
     </LinearLayout>
 
 </RelativeLayout>

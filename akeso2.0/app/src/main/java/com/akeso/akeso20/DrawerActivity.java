@@ -15,6 +15,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.akeso.akeso20.activity.AboutActivity;
+import com.akeso.akeso20.activity.FileActivity;
+import com.akeso.akeso20.activity.HelpActivity;
 import com.akeso.akeso20.fragment.RecyclerViewFragment;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
@@ -155,14 +158,35 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
         //左边菜单
         leftMenulayout = (RelativeLayout) findViewById(R.id.main_left_drawer_layout);
         View view2 = getLayoutInflater().inflate(R.layout.drawer_left, null);
-        view2.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT));
+        view2.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         leftMenulayout.addView(view2);
-        view2.findViewById(R.id.iv_close).setOnClickListener(new View.OnClickListener() {
+
+        View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDrawerLayout.closeDrawer(leftMenulayout);
+                switch (v.getId()) {
+                    case R.id.iv_close:
+                        mDrawerLayout.closeDrawer(leftMenulayout);
+                        break;
+                    case R.id.ll_help:
+                        HelpActivity.show(DrawerActivity.this);
+                        break;
+                    case R.id.ll_file:
+                        FileActivity.show(DrawerActivity.this);
+                        break;
+                    case R.id.ll_about:
+                        AboutActivity.show(DrawerActivity.this);
+                        break;
+                    default:
+                        break;
+                }
             }
-        });
+        };
+        view2.setOnClickListener(listener);
+        view2.findViewById(R.id.iv_close).setOnClickListener(listener);
+        view2.findViewById(R.id.ll_help).setOnClickListener(listener);
+        view2.findViewById(R.id.ll_file).setOnClickListener(listener);
+        view2.findViewById(R.id.ll_about).setOnClickListener(listener);
     }
 
     public void initRightLayout() {
@@ -170,8 +194,18 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
         //右边菜单
         rightMessagelayout = (RelativeLayout) findViewById(R.id.main_right_drawer_layout);
         View view = getLayoutInflater().inflate(R.layout.drawer_right, null);
-        view.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT));
+        view.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         rightMessagelayout.addView(view);
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    default:
+                        break;
+                }
+            }
+        };
+        view.setOnClickListener(listener);
 
     }
 

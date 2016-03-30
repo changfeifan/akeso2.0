@@ -11,6 +11,7 @@
         android:id="@+id/materialViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         app:viewpager_animatedHeaderImage="true"
         app:viewpager_color="@color/colorPrimary"
         app:viewpager_disableToolbar="false"
@@ -31,7 +32,8 @@
         android:id="@+id/main_content_frame_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        >
         <!--android:background="@android:color/transparent"-->
         <!-- 下层显示的主要内容 -->
 

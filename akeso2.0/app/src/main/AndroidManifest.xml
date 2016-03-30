@@ -20,8 +20,20 @@
         </activity>
 
         <activity android:name=".DrawerActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             />
+
+        <activity android:name=".activity.HelpActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+        <activity android:name=".activity.FileActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+        <activity android:name=".activity.AboutActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
