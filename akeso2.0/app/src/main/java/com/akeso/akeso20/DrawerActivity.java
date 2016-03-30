@@ -14,8 +14,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.akeso.akeso20.fragment.RecyclerViewFragment;
 import com.github.florent37.materialviewpager.MaterialViewPager;
@@ -154,10 +152,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
 
     public void initLeftLayout() {
 
-        //设置透明
-
         //左边菜单
-
         leftMenulayout = (RelativeLayout) findViewById(R.id.main_left_drawer_layout);
         View view2 = getLayoutInflater().inflate(R.layout.drawer_left, null);
         view2.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT));
@@ -165,35 +160,19 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
         view2.findViewById(R.id.iv_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mDrawerLayout.closeDrawer(leftMenulayout);
             }
         });
-//        tv.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View arg0) {
-//                // TODO Auto-generated method stub
-//                Toast.makeText(DrawerActivity.this, "Left", Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
 
     public void initRightLayout() {
 
-        //左边菜单
+        //右边菜单
         rightMessagelayout = (RelativeLayout) findViewById(R.id.main_right_drawer_layout);
-        View view = getLayoutInflater().inflate(android.R.layout.simple_list_item_1, null);
-        TextView tv = (TextView) view.findViewById(android.R.id.text1);
-        tv.setText("右边测试菜单");
+        View view = getLayoutInflater().inflate(R.layout.drawer_right, null);
+        view.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT));
         rightMessagelayout.addView(view);
-        tv.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View arg0) {
-                // TODO Auto-generated method stub
-
-                Toast.makeText(DrawerActivity.this, "Right", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void initEvent() {

@@ -78,7 +78,7 @@
         android:background="#FFF"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:paddingTop="50dp"></RelativeLayout>
+        android:paddingTop="10dp"></RelativeLayout>
 
 
 </android.support.v4.widget.DrawerLayout>
