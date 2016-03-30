@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?><!--<TextView xmlns:android="http://schemas.android.com/apk/res/android"--><!--android:id="@+id/logo_white"--><!--android:layout_width="wrap_content"--><!--android:layout_height="@dimen/materialviewpager_logoHeight"--><!--android:text="title"--><!--android:textSize="30sp"--><!--android:textColor="@android:color/white"/>-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="180dp"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    >
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:fitsSystemWindows="true"
+        android:src="@drawable/ic_right" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:text="黄宇"
+        android:textColor="@color/black"
+        android:textSize="13dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="从2014年11月3日开始使用UP"
+        android:textSize="9dp"
+        android:layout_marginTop="3dp"
+        android:textColor="@color/text_gray"/>
+
+    <TextView
+        android:id="@+id/tv_today"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="2015年3月18日"
+        android:textColor="@color/black"
+        android:textSize="10dp" />
+</LinearLayout>

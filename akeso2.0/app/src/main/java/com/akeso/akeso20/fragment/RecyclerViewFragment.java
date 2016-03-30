@@ -25,7 +25,7 @@ public class RecyclerViewFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
-    private static final int ITEM_COUNT = 100;
+    private static final int ITEM_COUNT = 5;
 
     private List<Object> mContentItems = new ArrayList<>();
 

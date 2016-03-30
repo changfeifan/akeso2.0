@@ -32,7 +32,9 @@
         <activity android:name=".activity.AboutActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             />
-
+        <activity android:name=".activity.PersonalActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

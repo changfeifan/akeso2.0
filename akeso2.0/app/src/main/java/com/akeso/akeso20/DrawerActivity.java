@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import com.akeso.akeso20.activity.AboutActivity;
 import com.akeso.akeso20.activity.FileActivity;
 import com.akeso.akeso20.activity.HelpActivity;
+import com.akeso.akeso20.activity.PersonalActivity;
 import com.akeso.akeso20.fragment.RecyclerViewFragment;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
@@ -75,7 +76,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public Fragment getItem(int position) {
-                switch (position % 4) {
+                switch (position % 3) {
                     //case 0:
                     //    return RecyclerViewFragment.newInstance();
                     //case 1:
@@ -177,6 +178,8 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                     case R.id.ll_about:
                         AboutActivity.show(DrawerActivity.this);
                         break;
+                    case R.id.ll_person:
+                        PersonalActivity.show(DrawerActivity.this);
                     default:
                         break;
                 }
@@ -187,6 +190,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
         view2.findViewById(R.id.ll_help).setOnClickListener(listener);
         view2.findViewById(R.id.ll_file).setOnClickListener(listener);
         view2.findViewById(R.id.ll_about).setOnClickListener(listener);
+        view2.findViewById(R.id.ll_person).setOnClickListener(listener);
     }
 
     public void initRightLayout() {
