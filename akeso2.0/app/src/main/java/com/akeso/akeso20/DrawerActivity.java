@@ -101,7 +101,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                     case 1:
                         return "视觉环境";
                     case 2:
-                        return "视觉习惯";
+                         return "视觉习惯";
 //                    case 3:
 //                        return "Divertissement";
                 }
@@ -114,17 +114,17 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
             public HeaderDesign getHeaderDesign(int page) {
                 switch (page) {
                     case 0:
-                        return HeaderDesign.fromColorResAndUrl(
+                        return HeaderDesign.fromColorResAndDrawable(
                                 R.color.blue,
-                                "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg");
+                               getResources().getDrawable(R.drawable.photo1));
                     case 1:
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.blue_light,
-                                "https://fs01.androidpit.info/a/63/0e/android-l-wallpapers-630ea6-h900.jpg");
+                        return HeaderDesign.fromColorResAndDrawable(
+                                R.color.black,
+                                getResources().getDrawable(R.drawable.photo2));
                     case 2:
-                        return HeaderDesign.fromColorResAndUrl(
+                        return HeaderDesign.fromColorResAndDrawable(
                                 R.color.blue,
-                                "http://www.droid-life.com/wp-content/uploads/2014/10/lollipop-wallpapers10.jpg");
+                                getResources().getDrawable(R.drawable.photo3));
 //                    case 3:
 //                        return HeaderDesign.fromColorResAndUrl(
 //                                R.color.red,

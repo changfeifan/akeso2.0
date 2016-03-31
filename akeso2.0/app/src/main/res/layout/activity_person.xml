@@ -22,9 +22,9 @@
         app:viewpager_hideToolbarAndTitle="true"
         app:viewpager_logo="@layout/header_person"
         app:viewpager_logoMarginTop="80dp"
-        app:viewpager_pagerTitleStrip="@layout/my_tabs"
         app:viewpager_parallaxHeaderFactor="1.5"
         app:viewpager_transparentToolbar="true" />
+    <!--app:viewpager_pagerTitleStrip="@layout/my_tabs"-->
 
     <LinearLayout
         android:id="@+id/ll_title"

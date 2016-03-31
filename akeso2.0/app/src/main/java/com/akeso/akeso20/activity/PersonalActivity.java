@@ -8,16 +8,17 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.akeso.akeso20.R;
-import com.akeso.akeso20.fragment.RecyclerViewFragment;
+import com.akeso.akeso20.fragment.PersonViewFragment;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 
 /**
  * Created by changfeifan on 16/3/30.
  */
-public class PersonalActivity extends AppCompatActivity {
+public class PersonalActivity extends AppCompatActivity implements View.OnClickListener {
     private MaterialViewPager mViewPager;
     private Toolbar toolbar;
 
@@ -25,6 +26,8 @@ public class PersonalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person);
+
+        findViewById(R.id.iv_back).setOnClickListener(this);
 
         mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
         toolbar = mViewPager.getToolbar();
@@ -52,7 +55,7 @@ public class PersonalActivity extends AppCompatActivity {
                     //case 2:
                     //    return WebViewFragment.newInstance();
                     default:
-                        return RecyclerViewFragment.newInstance();
+                        return PersonViewFragment.newInstance();
                 }
             }
 
@@ -83,7 +86,7 @@ public class PersonalActivity extends AppCompatActivity {
                 switch (page) {
                     case 0:
                         return HeaderDesign.fromColorResAndDrawable(
-                                R.color.blue_light,
+                                R.color.white,
                                 getResources().getDrawable(R.drawable.white));
 //                    case 1:
 //                        return HeaderDesign.fromColorResAndUrl(
@@ -113,4 +116,14 @@ public class PersonalActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.iv_back:
+                finish();
+                break;
+            default:
+                break;
+        }
+    }
 }
