@@ -19,7 +19,9 @@ import com.akeso.akeso20.activity.AboutActivity;
 import com.akeso.akeso20.activity.FileActivity;
 import com.akeso.akeso20.activity.HelpActivity;
 import com.akeso.akeso20.activity.PersonalActivity;
-import com.akeso.akeso20.fragment.RecyclerViewFragment;
+import com.akeso.akeso20.fragment.VisualBurdenViewFragment;
+import com.akeso.akeso20.fragment.VisualEnvirmentViewFragment;
+import com.akeso.akeso20.fragment.VisualHabitViewFragment;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 
@@ -77,14 +79,14 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public Fragment getItem(int position) {
                 switch (position % 3) {
-                    //case 0:
-                    //    return RecyclerViewFragment.newInstance();
-                    //case 1:
-                    //    return RecyclerViewFragment.newInstance();
-                    //case 2:
-                    //    return WebViewFragment.newInstance();
+                    case 0:
+                        return VisualBurdenViewFragment.newInstance();
+                    case 1:
+                        return VisualEnvirmentViewFragment.newInstance();
+                    case 2:
+                        return VisualHabitViewFragment.newInstance();
                     default:
-                        return RecyclerViewFragment.newInstance();
+                        return VisualBurdenViewFragment.newInstance();
                 }
             }
 

@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">akeso2.0</string>
     <string name="action_settings">Settings</string>
+
+    <!--title-->
+    <string name="title_accomodation">调节力</string>
+    <string name="title_illumination">光照/UV</string>
+    <string name="title_humidity">湿度</string>
+    <string name="title_neck_angle">颈部角度</string>
+    <string name="title_time">户内外时间</string>
+    <string name="title_eyestrain">眼疲劳</string>
+    <string name="title_neckstrain">颈疲劳</string>
+
 </resources>

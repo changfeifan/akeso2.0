@@ -11,28 +11,28 @@ import android.view.ViewGroup;
 
 import com.akeso.akeso20.R;
 import com.akeso.akeso20.adapter.TestRecyclerViewAdapter;
+import com.akeso.akeso20.constant.ViewInfo;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * Created by florentchampigny on 24/04/15.
  */
-public class RecyclerViewFragment extends Fragment {
+public class VisualEnvirmentViewFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
-    private static final int ITEM_COUNT = 5;
-
-//    private List<Object> mContentItems = new ArrayList<>();
-
     private JSONArray array = new JSONArray();
 
+    private ViewInfo viewInfo_illumination = new ViewInfo();
+    private ViewInfo viewInfo_humidity = new ViewInfo();
 
-    public static RecyclerViewFragment newInstance() {
-        return new RecyclerViewFragment();
+    public static VisualEnvirmentViewFragment newInstance() {
+        return new VisualEnvirmentViewFragment();
     }
 
     @Override
@@ -48,11 +48,26 @@ public class RecyclerViewFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
+        baseDate();
+
         mAdapter = new RecyclerViewMaterialAdapter(new TestRecyclerViewAdapter(array));
         mRecyclerView.setAdapter(mAdapter);
 
-
-
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
+    }
+
+    public JSONArray baseDate() {
+        viewInfo_humidity.setTitle(getString(R.string.title_humidity));
+        viewInfo_humidity.setBackground_color(R.color.blue_light);
+        viewInfo_illumination.setTitle(getString(R.string.title_illumination));
+        viewInfo_illumination.setBackground_color(R.color.red_light);
+
+        try {
+            array.put(viewInfo_humidity.getJsonObject());
+            array.put(viewInfo_illumination.getJsonObject());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return array;
     }
 }

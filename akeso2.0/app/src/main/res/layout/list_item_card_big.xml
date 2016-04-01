@@ -50,6 +50,7 @@
                     android:textSize="10dp" />
 
                 <TextView
+                    android:id="@+id/tv_data"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/tv_time"
@@ -63,6 +64,7 @@
 
 
             <TextView
+                android:id="@+id/tv_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="您当前处于的光线太暗，在这样的环境下阅读会导致您的眼部负担加重，引起不良疾病。"
