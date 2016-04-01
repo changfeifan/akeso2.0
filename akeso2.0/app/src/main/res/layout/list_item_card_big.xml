@@ -16,10 +16,11 @@
         app:cardCornerRadius="2dp"
         app:cardElevation="2dp"
         app:cardPreventCornerOverlap="true"
-        app:contentPadding="0dp">
+        app:contentPadding="0dp"
+        >
 
         <RelativeLayout
-
+            android:id="@+id/rl_all"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
            >
@@ -27,7 +28,8 @@
                 android:id="@+id/rl_background_top"
                 android:layout_width="match_parent"
                 android:layout_height="140dp"
-                android:background="@color/red_light">
+                android:background="@color/red_light"
+                >
                 <TextView
                     android:id="@+id/tv_title"
                     android:layout_width="wrap_content"

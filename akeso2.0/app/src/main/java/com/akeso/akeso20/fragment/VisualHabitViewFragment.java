@@ -30,6 +30,7 @@ public class VisualHabitViewFragment extends Fragment {
 
     private ViewInfo viewInfo_neck = new ViewInfo();
     private ViewInfo viewInfo_neckstrain = new ViewInfo();
+    private ViewInfo viewInfo_null = new ViewInfo();
 
     public static VisualHabitViewFragment newInstance() {
         return new VisualHabitViewFragment();
@@ -61,9 +62,13 @@ public class VisualHabitViewFragment extends Fragment {
         viewInfo_neck.setBackground_color(R.color.purple_light);
         viewInfo_neckstrain.setTitle(getString(R.string.title_neckstrain));
         viewInfo_neckstrain.setBackground_color(R.color.green_light);
+        viewInfo_null.setType(2);
+
         try {
             array.put(viewInfo_neck.getJsonObject());
             array.put(viewInfo_neckstrain.getJsonObject());
+            array.put(viewInfo_null.getJsonObject());
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -30,6 +30,8 @@ public class VisualEnvirmentViewFragment extends Fragment {
 
     private ViewInfo viewInfo_illumination = new ViewInfo();
     private ViewInfo viewInfo_humidity = new ViewInfo();
+    private ViewInfo viewInfo_null = new ViewInfo();
+
 
     public static VisualEnvirmentViewFragment newInstance() {
         return new VisualEnvirmentViewFragment();
@@ -62,9 +64,11 @@ public class VisualEnvirmentViewFragment extends Fragment {
         viewInfo_illumination.setTitle(getString(R.string.title_illumination));
         viewInfo_illumination.setBackground_color(R.color.red_light);
 
+        viewInfo_null.setType(2);
         try {
             array.put(viewInfo_humidity.getJsonObject());
             array.put(viewInfo_illumination.getJsonObject());
+            array.put(viewInfo_null.getJsonObject());
         } catch (JSONException e) {
             e.printStackTrace();
         }

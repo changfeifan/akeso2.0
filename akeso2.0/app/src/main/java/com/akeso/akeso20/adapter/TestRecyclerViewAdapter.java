@@ -1,5 +1,6 @@
 package com.akeso.akeso20.adapter;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,10 +70,11 @@ public class TestRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 view.findViewById(R.id.rl_background_top).setBackgroundColor(parent.getResources().getColor(R.color.blue_light));
                 return new RecyclerView.ViewHolder(view) {
                 };
-            case 2:
+            case 2://占位页面
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_card_big, parent, false);
-                view.findViewById(R.id.rl_background_top).setBackgroundColor(parent.getResources().getColor(R.color.green_light));
+                CardView card_view=(CardView)view.findViewById(R.id.card_view);
+                card_view.setVisibility(View.INVISIBLE);
                 return new RecyclerView.ViewHolder(view) {
                 };
             case 3:
