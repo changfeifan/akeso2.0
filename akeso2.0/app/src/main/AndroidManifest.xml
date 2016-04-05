@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.akeso.akeso20" >
+    package="com.akeso.akeso20">
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,23 +19,33 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".DrawerActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
+        <activity
+            android:name=".DrawerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
-        <activity android:name=".activity.HelpActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
-        <activity android:name=".activity.FileActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
-        <activity android:name=".activity.AboutActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
-        <activity android:name=".activity.PersonalActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
+        <activity
+            android:name=".activity.HelpActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".activity.FileActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".activity.AboutActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".activity.PersonalActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".guide.ProductTour3Activity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
 </manifest>

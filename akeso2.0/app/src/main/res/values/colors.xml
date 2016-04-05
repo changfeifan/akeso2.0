@@ -14,4 +14,6 @@
     <color name="text_gray">#9b9b9b</color>
     <color name="line_gray">#f0f0f0</color>
     <color name="button_blue">#0088cc</color>
+    <color name="text_selected">#888</color>
+
 </resources>

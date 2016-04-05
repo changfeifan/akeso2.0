@@ -14,7 +14,7 @@ import com.akeso.akeso20.constant.ViewInfo;
 import org.json.JSONArray;
 
 /**
- * Created by florentchampigny on 24/04/15.
+ * Created by cff on 24/04/15.
  */
 public class TestRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

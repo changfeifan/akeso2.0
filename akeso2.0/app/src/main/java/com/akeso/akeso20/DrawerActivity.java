@@ -40,6 +40,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
 
     public static void show(Activity activity) {
         Intent intent = new Intent(activity, DrawerActivity.class);
+        activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         activity.startActivity(intent);
     }
 

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.akeso.akeso20.guide.ProductTour3Activity;
+
 public class MainActivity extends Activity {
 
     @Override
@@ -14,10 +16,10 @@ public class MainActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                DrawerActivity.show(MainActivity.this);
+                ProductTour3Activity.show(MainActivity.this);
                 MainActivity.this.finish();    // 结束启动动画界面
             }
-        }, 3000);    //启动动画持续3秒钟
+        }, 2000);    //启动动画持续3秒钟
 
     }
 
