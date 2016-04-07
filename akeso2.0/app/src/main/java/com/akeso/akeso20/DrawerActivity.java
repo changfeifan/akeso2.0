@@ -19,6 +19,7 @@ import com.akeso.akeso20.activity.AboutActivity;
 import com.akeso.akeso20.activity.FileActivity;
 import com.akeso.akeso20.activity.HelpActivity;
 import com.akeso.akeso20.activity.PersonalActivity;
+import com.akeso.akeso20.ble.BleListActivity;
 import com.akeso.akeso20.fragment.VisualBurdenViewFragment;
 import com.akeso.akeso20.fragment.VisualEnvirmentViewFragment;
 import com.akeso.akeso20.fragment.VisualHabitViewFragment;
@@ -104,7 +105,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                     case 1:
                         return "视觉环境";
                     case 2:
-                         return "视觉习惯";
+                        return "视觉习惯";
 //                    case 3:
 //                        return "Divertissement";
                 }
@@ -119,7 +120,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                     case 0:
                         return HeaderDesign.fromColorResAndDrawable(
                                 R.color.blue,
-                               getResources().getDrawable(R.drawable.photo1));
+                                getResources().getDrawable(R.drawable.photo1));
                     case 1:
                         return HeaderDesign.fromColorResAndDrawable(
                                 R.color.black,
@@ -207,13 +208,16 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
+                    case R.id.iv_device:
+                        BleListActivity.show(DrawerActivity.this);
+                        break;
                     default:
                         break;
                 }
             }
         };
         view.setOnClickListener(listener);
-
+        view.findViewById(R.id.iv_device).setOnClickListener(listener);
     }
 
     private void initEvent() {

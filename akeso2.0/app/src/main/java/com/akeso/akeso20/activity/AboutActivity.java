@@ -32,7 +32,7 @@ public class AboutActivity extends Activity implements View.OnClickListener {
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setUseWideViewPort(true);
 
-        webView.loadUrl("http://www.akeso.cn/about");
+        webView.loadUrl("http://www.akeso.cn/about?web_view=true");
         //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         webView.setWebViewClient(new WebViewClient() {
             @Override
