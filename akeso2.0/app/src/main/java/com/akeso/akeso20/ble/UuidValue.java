@@ -27,12 +27,13 @@ public class UuidValue implements Parcelable {
         this.data = data;
     }
 
-    public UuidValue(){
+    public UuidValue() {
 
     }
 
     protected UuidValue(Parcel in) {
         Uuid = in.readString();
+        data = in.createByteArray();
     }
 
     public static final Creator<UuidValue> CREATOR = new Creator<UuidValue>() {

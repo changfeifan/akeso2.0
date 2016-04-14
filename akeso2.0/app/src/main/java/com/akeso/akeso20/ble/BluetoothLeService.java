@@ -31,6 +31,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -49,7 +50,6 @@ public class BluetoothLeService extends Service {
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
     private int mConnectionState = STATE_DISCONNECTED;
-    private UuidValue uuidValue=new UuidValue();
 
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
@@ -68,6 +68,8 @@ public class BluetoothLeService extends Service {
 
     public final static UUID UUID_HEART_RATE_MEASUREMENT =
             UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
+
+
 
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
@@ -99,7 +101,7 @@ public class BluetoothLeService extends Service {
                     Log.i(TAG, "Attempting to start service discovery:" +
                             mBluetoothGatt.discoverServices());
 
-                }else if(BluetoothDevice.BOND_NONE == device.getBondState()) {
+                } else if (BluetoothDevice.BOND_NONE == device.getBondState()) {
                     Log.d(TAG, "Not Paired!");
                     //防止未绑定成功，如不希望自动重绑可去掉
                     device.createBond();
@@ -121,13 +123,44 @@ public class BluetoothLeService extends Service {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
                 Log.w(TAG, "onServicesDiscovered complete! ");
-                if(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Status_information_data))!=null){
-                    gatt.setCharacteristicNotification(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Status_information_data))
-                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Status_information_data)), true);
+
+                if (gatt.getService(UUID.fromString(SampleGattAttributes.Service_Temperature_and_humidity_sensor_data)) != null) {
+                    gatt.setCharacteristicNotification(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Temperature_and_humidity_sensor_data))
+                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Temperature_and_humidity_sensor_data)), true);
+                    Log.i(TAG, "找到温湿度服务。");
+                    readCharacteristic(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Temperature_and_humidity_sensor_data))
+                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Temperature_and_humidity_sensor_data)));
+                }
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (gatt.getService(UUID.fromString(SampleGattAttributes.Service_Status_information_data)) != null) {
+//                    gatt.setCharacteristicNotification(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Status_information_data))
+//                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Status_information_data)), true);
                     Log.i(TAG, "找到服务，请求读取设备基本信息...");
                     readCharacteristic(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Status_information_data))
                             .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Status_information_data)));
                 }
+//
+                if (gatt.getService(UUID.fromString(SampleGattAttributes.Service_Ultraviolet_light_sensor_data)) != null) {
+                    gatt.setCharacteristicNotification(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Ultraviolet_light_sensor_data))
+                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Ultraviolet_light_sensor_data)), true);
+                    Log.i(TAG, "找到Uv，光照服务。");
+                    readCharacteristic(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Ultraviolet_light_sensor_data))
+                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Ultraviolet_light_sensor_data)));
+                }
+                if (gatt.getService(UUID.fromString(SampleGattAttributes.Service_Acceleration_sensor_data)) != null) {
+                    gatt.setCharacteristicNotification(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Acceleration_sensor_data))
+                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Acceleration_sensor_data)), true);
+                    Log.i(TAG, "找到加速度服务。");
+                    readCharacteristic(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Acceleration_sensor_data))
+                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Acceleration_sensor_data)));
+                }
+
+
+
 
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);
@@ -155,8 +188,7 @@ public class BluetoothLeService extends Service {
         sendBroadcast(intent);
     }
 
-    private void broadcastUpdate(final String action,
-                                 final BluetoothGattCharacteristic characteristic) {
+    private void broadcastUpdate(final String action, final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
         Log.i(TAG, "UUID:" + characteristic.getUuid());
         // This is special handling for the Heart Rate Measurement profile.  Data parsing is
@@ -181,12 +213,15 @@ public class BluetoothLeService extends Service {
             Log.i(TAG, "Get Data of:" + characteristic.getUuid());
             if (data != null && data.length > 0) {
                 final StringBuilder stringBuilder = new StringBuilder(data.length);
-                for(byte byteChar : data)
+                for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
-                uuidValue.data=data;
-                uuidValue.Uuid=characteristic.getUuid().toString();
 //                intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
-                intent.putExtra(EXTRA_DATA,uuidValue);
+                UuidValue uuidValue = new UuidValue();
+                uuidValue.Uuid = characteristic.getUuid().toString();
+                uuidValue.data = data;
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("uuid", uuidValue);
+                intent.putExtras(bundle);
             }
         }
         sendBroadcast(intent);
@@ -243,11 +278,10 @@ public class BluetoothLeService extends Service {
      * Connects to the GATT server hosted on the Bluetooth LE device.
      *
      * @param address The device address of the destination device.
-     *
      * @return Return true if the connection is initiated successfully. The connection result
-     *         is reported asynchronously through the
-     *         {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
-     *         callback.
+     * is reported asynchronously through the
+     * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
+     * callback.
      */
     public boolean connect(final String address) {
         if (mBluetoothAdapter == null || address == null) {
@@ -326,7 +360,7 @@ public class BluetoothLeService extends Service {
      * Enables or disables notification on a give characteristic.
      *
      * @param characteristic Characteristic to act on.
-     * @param enabled If true, enable notification.  False otherwise.
+     * @param enabled        If true, enable notification.  False otherwise.
      */
     public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic,
                                               boolean enabled) {
@@ -336,10 +370,10 @@ public class BluetoothLeService extends Service {
         }
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
 
-            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
-                    UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
-            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-            mBluetoothGatt.writeDescriptor(descriptor);
+        BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
+                UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
+        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+        mBluetoothGatt.writeDescriptor(descriptor);
     }
 
     /**
@@ -379,7 +413,7 @@ public class BluetoothLeService extends Service {
                     }
                     Log.i(TAG, "Attempting to start service discovery:" +
                             mBluetoothGatt.discoverServices());
-                }else if(BluetoothDevice.BOND_NONE == device.getBondState()){
+                } else if (BluetoothDevice.BOND_NONE == device.getBondState()) {
                     //防止未绑定成功，如不希望自动重绑可去掉
                     device.createBond();
                 }

@@ -12,7 +12,7 @@
         android:id="@+id/materialViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@drawable/background_guide"
         app:viewpager_animatedHeaderImage="true"
         app:viewpager_color="@color/colorPrimary"
         app:viewpager_disableToolbar="false"
@@ -20,14 +20,15 @@
         app:viewpager_enableToolbarElevation="true"
         app:viewpager_headerAdditionalHeight="20dp"
         app:viewpager_headerAlpha="1.0"
-        app:viewpager_headerHeight="200dp"
+        app:viewpager_headerHeight="170dp"
         app:viewpager_hideLogoWithFade="true"
         app:viewpager_hideToolbarAndTitle="true"
         app:viewpager_logo="@layout/header_logo"
-        app:viewpager_logoMarginTop="100dp"
+        app:viewpager_logoMarginTop="70dp"
         app:viewpager_pagerTitleStrip="@layout/my_tabs"
         app:viewpager_parallaxHeaderFactor="1.5"
-        app:viewpager_transparentToolbar="true" />
+        app:viewpager_transparentToolbar="true"
+        />
 
     <RelativeLayout
         android:id="@+id/main_content_frame_parent"

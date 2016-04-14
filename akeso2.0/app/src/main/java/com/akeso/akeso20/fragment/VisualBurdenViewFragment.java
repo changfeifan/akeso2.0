@@ -52,7 +52,7 @@ public class VisualBurdenViewFragment extends Fragment {
 
         baseDate();
 
-        mAdapter = new RecyclerViewMaterialAdapter(new TestRecyclerViewAdapter(array));
+        mAdapter = new RecyclerViewMaterialAdapter(new TestRecyclerViewAdapter(getActivity(),array));
         mRecyclerView.setAdapter(mAdapter);
 
 

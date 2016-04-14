@@ -1,6 +1,7 @@
 package com.akeso.akeso20.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,6 +32,8 @@ public class VisualEnvirmentViewFragment extends Fragment {
     private ViewInfo viewInfo_illumination = new ViewInfo();
     private ViewInfo viewInfo_humidity = new ViewInfo();
     private ViewInfo viewInfo_null = new ViewInfo();
+    Handler handler = new Handler();
+    private TestRecyclerViewAdapter testRecyclerViewAdapter;
 
 
     public static VisualEnvirmentViewFragment newInstance() {
@@ -52,10 +55,13 @@ public class VisualEnvirmentViewFragment extends Fragment {
 
         baseDate();
 
-        mAdapter = new RecyclerViewMaterialAdapter(new TestRecyclerViewAdapter(array));
+        testRecyclerViewAdapter = new TestRecyclerViewAdapter(getActivity(),array);
+        mAdapter = new RecyclerViewMaterialAdapter(testRecyclerViewAdapter);
         mRecyclerView.setAdapter(mAdapter);
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
+
+        update();
     }
 
     public JSONArray baseDate() {
@@ -73,5 +79,35 @@ public class VisualEnvirmentViewFragment extends Fragment {
             e.printStackTrace();
         }
         return array;
+    }
+
+    public void update() {
+        handler.postDelayed(runnable, 3000);
+    }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                reset(getActivity().getIntent().getStringExtra("light"), getActivity().getIntent().getStringExtra("humidity"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            handler.postDelayed(runnable, 3000);
+
+        }
+    };
+
+    public void reset(String str1, String str2) {
+        try {
+            array.getJSONObject(0).put("data", str2 + "%");
+            array.getJSONObject(1).put("data", str1 + "");
+            testRecyclerViewAdapter.setArray(array);
+            mAdapter.notifyDataSetChanged();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -81,7 +81,7 @@ public class ViewInfo {
         jsonObject.put("content", getContent());
         jsonObject.put("state", getState());
         jsonObject.put("timeInfo", getTimeInfo());
-        jsonObject.put("date", getData());
+        jsonObject.put("data", getData());
         jsonObject.put("background_color", getBackground_color());
         jsonObject.put("type", getType());
         return jsonObject;
@@ -89,10 +89,10 @@ public class ViewInfo {
 
     public ViewInfo JsontoViewInfo(JSONObject jsonObject) {
         ViewInfo info = new ViewInfo();
-        info.title = jsonObject.optString("title");
-        info.content = jsonObject.optString("content");
-        info.state = jsonObject.optInt("state");
-        info.timeInfo = jsonObject.optString("timeInfo");
+        info.title = jsonObject.optString("title","");
+        info.content = jsonObject.optString("content","");
+        info.state = jsonObject.optInt("state",0);
+        info.timeInfo = jsonObject.optString("timeInfo","");
         info.data = jsonObject.optString("data","暂无");
         info.background_color = jsonObject.optInt("background_color", R.color.background_gray);
         info.type = jsonObject.optInt("type", 1);

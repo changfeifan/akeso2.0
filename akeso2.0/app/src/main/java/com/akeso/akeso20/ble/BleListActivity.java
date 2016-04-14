@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.akeso.akeso20.R;
-import com.akeso.akeso20.activity.GlassActivity;
 
 import java.util.ArrayList;
 
@@ -30,7 +30,7 @@ public class BleListActivity extends Activity {
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
-    private Handler mHandler=new Handler();
+    private Handler mHandler = new Handler();
     ListView lv_ble_device;
 
     private static final int REQUEST_ENABLE_BT = 1;
@@ -45,8 +45,6 @@ public class BleListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ble);
-
-
 
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
@@ -70,8 +68,8 @@ public class BleListActivity extends Activity {
         setView();
     }
 
-    void setView(){
-        lv_ble_device=(ListView)findViewById(R.id.lv_ble_device);
+    void setView() {
+        lv_ble_device = (ListView) findViewById(R.id.lv_ble_device);
         lv_ble_device.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -81,14 +79,19 @@ public class BleListActivity extends Activity {
 //                final Intent intent = new Intent(this, DeviceControlActivity.class);
 //                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
 //                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-                GlassActivity.show(BleListActivity.this,device.getName(),device.getAddress());
-
+                SharedPreferences mySharedPreferences = getSharedPreferences("test",
+                        Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = mySharedPreferences.edit();
+                editor.putString("name", device.getName());
+                editor.putString("address", device.getAddress());
+                editor.commit();
                 if (mScanning) {
                     mBluetoothAdapter.stopLeScan(mLeScanCallback);
                     mScanning = false;
                     try {
                         Thread.sleep(1000);
-//                        startActivity(intent);
+                        DrawerActivity.show(BleListActivity.this);
+
                     } catch (InterruptedException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();

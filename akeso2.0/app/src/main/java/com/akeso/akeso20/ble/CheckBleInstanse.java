@@ -1,6 +1,5 @@
 package com.akeso.akeso20.ble;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
@@ -28,11 +27,11 @@ import java.util.List;
 /**
  * Created by changfeifan on 16/4/5.
  */
-public class CheckBleInstanse extends Activity {
+public class CheckBleInstanse {
 
     private final static String TAG = CheckBleInstanse.class.getSimpleName();
     private String mDeviceAddress;
-
+    private Context context;
     private BluetoothLeService mBluetoothLeService;
     private BluetoothAdapter mBluetoothAdapter;
     private Handler mHandler = new Handler();
@@ -47,13 +46,14 @@ public class CheckBleInstanse extends Activity {
     private final String LIST_UUID = "UUID";
 
     private JSONObject blejson = new JSONObject();
-
+    private BluetoothGattCharacteristic mNotifyCharacteristic;
 
     /* 持有私有静态实例，防止被引用，此处赋值为null，目的是实现延迟加载 */
     private static CheckBleInstanse instance = null;
 
     /* 私有构造方法，防止被实例化 */
     private CheckBleInstanse() {
+
     }
 
     /* 懒汉式，静态工程方法，创建实例 */
@@ -64,28 +64,31 @@ public class CheckBleInstanse extends Activity {
         return instance;
     }
 
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     public boolean CheckBle() {
         Log.e(getClass().getName(), "start check ble.");
 
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
-        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Toast.makeText(this, "ble_not_supported", Toast.LENGTH_SHORT).show();
-            finish();
+        if (!context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(context, "ble_not_supported", Toast.LENGTH_SHORT).show();
+//            finish();
             return false;
 
         }
         final BluetoothManager bluetoothManager =
-                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+                (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
 
         // Checks if Bluetooth is supported on the device.
         if (mBluetoothAdapter == null) {
-            Toast.makeText(this, "error_bluetooth_not_supported", Toast.LENGTH_SHORT).show();
-            finish();
+            Toast.makeText(context, "error_bluetooth_not_supported", Toast.LENGTH_SHORT).show();
+//            finish();
             return false;
         }
-
         return true;
     }
 
@@ -101,18 +104,22 @@ public class CheckBleInstanse extends Activity {
             final String action = intent.getAction();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
+                Log.e(getClass().toString(),BluetoothLeService.ACTION_GATT_CONNECTED);
 //                updateConnectionState(R.string.connected);
 //                invalidateOptionsMenu();
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
+                Log.e(getClass().toString(),BluetoothLeService.ACTION_GATT_DISCONNECTED);
+
 //                updateConnectionState(R.string.disconnected);
 //                clearUI();
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
+                Log.e(getClass().toString(),BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
                 // Show all the supported services and characteristics on the user interface.
                 displayGattServices(mBluetoothLeService.getSupportedGattServices());
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
+                Log.e(getClass().toString(),BluetoothLeService.ACTION_DATA_AVAILABLE);
                 displayData((UuidValue) intent.getParcelableExtra(BluetoothLeService.EXTRA_DATA));
-
             }
         }
     };
@@ -124,7 +131,7 @@ public class CheckBleInstanse extends Activity {
             mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
             if (!mBluetoothLeService.initialize()) {
                 Log.e(TAG, "Unable to initialize Bluetooth");
-                finish();
+//                finish();
             }
             // Automatically connects to the device upon successful start-up initialization.
             mBluetoothLeService.connect(mDeviceAddress);
@@ -137,43 +144,62 @@ public class CheckBleInstanse extends Activity {
     };
 
     public void startConnect(String mDeviceName, String mDeviceAddress) {
-        mBluetoothLeService.connect(mDeviceAddress);
-        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
-        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
+        Intent gattServiceIntent = new Intent(context, BluetoothLeService.class);
+        context.bindService(gattServiceIntent, mServiceConnection, context.BIND_AUTO_CREATE);
     }
 
-    public void UnBindBleDevice() {
-        unbindService(mServiceConnection);
+
+    public void disconnect() {
+        mBluetoothLeService.disconnect();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+    public void unBindBleDevice() {
+        context.unbindService(mServiceConnection);
+        mBluetoothLeService = null;
+    }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+//        if (mBluetoothLeService != null) {
+//            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
+//            Log.d(TAG, "Connect request result=" + result);
+//        }
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        unregisterReceiver(mGattUpdateReceiver);
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        unbindService(mServiceConnection);
+//        mBluetoothLeService = null;
+//    }
+
+    public void registerReceive() {
+        context.registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         if (mBluetoothLeService != null) {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             Log.d(TAG, "Connect request result=" + result);
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(mGattUpdateReceiver);
-    }
+    public void unRegisterReceive(){
+        context.unregisterReceiver(mGattUpdateReceiver);
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbindService(mServiceConnection);
-        mBluetoothLeService = null;
     }
 
     private void displayGattServices(List<BluetoothGattService> gattServices) {
         if (gattServices == null) return;
         String uuid = null;
-        String unknownServiceString = getResources().getString(R.string.unknown_service);
-        String unknownCharaString = getResources().getString(R.string.unknown_characteristic);
+        String unknownServiceString = context.getResources().getString(R.string.unknown_service);
+        String unknownCharaString = context.getResources().getString(R.string.unknown_characteristic);
         ArrayList<HashMap<String, String>> gattServiceData = new ArrayList<HashMap<String, String>>();
         ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData
                 = new ArrayList<ArrayList<HashMap<String, String>>>();
@@ -193,6 +219,7 @@ public class CheckBleInstanse extends Activity {
 
             // Loops through available Characteristics.
             for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
+
                 charas.add(gattCharacteristic);
                 HashMap<String, String> currentCharaData = new HashMap<String, String>();
                 uuid = gattCharacteristic.getUuid().toString();
@@ -200,11 +227,36 @@ public class CheckBleInstanse extends Activity {
                         LIST_NAME, SampleGattAttributes.lookup(uuid, unknownCharaString));
                 currentCharaData.put(LIST_UUID, uuid);
                 gattCharacteristicGroupData.add(currentCharaData);
+
+
             }
             mGattCharacteristics.add(charas);
             gattCharacteristicData.add(gattCharacteristicGroupData);
         }
 
+        for (int i = 0; i < mGattCharacteristics.size(); i++) {
+            for (int j = 0; j < mGattCharacteristics.get(i).size(); j++) {
+                BluetoothGattCharacteristic characteristic = mGattCharacteristics.get(i).get(j);
+                final int charaProp = characteristic.getProperties();
+                if (characteristic.getUuid().equals(SampleGattAttributes.Characteristics_Acceleration_sensor_data)) {
+                    if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
+                        // If there is an active notification on a characteristic, clear
+                        // it first so it doesn't update the data field on the user interface.
+                        if (mNotifyCharacteristic != null) {
+                            mBluetoothLeService.setCharacteristicNotification(
+                                    mNotifyCharacteristic, false);
+                            mNotifyCharacteristic = null;
+                        }
+                        mBluetoothLeService.readCharacteristic(characteristic);
+                    }
+                    if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
+                        mNotifyCharacteristic = characteristic;
+                        mBluetoothLeService.setCharacteristicNotification(
+                                characteristic, true);
+                    }
+                }
+            }
+        }
 
 //        mGattServicesList.setAdapter(gattServiceAdapter);
     }
@@ -220,12 +272,19 @@ public class CheckBleInstanse extends Activity {
 
     private void displayData(UuidValue data) {
         if (data != null) {
-
+            Log.e("jiasu", data.getUuid() + data.getData());
+//            for (){
+//
+//            }
 //            mDataField.setText(data);
         }
     }
 
-    public JSONObject getDataJson(){
+    public void text(String a) {
+        Log.e("test", "testttttttt" + "  " + a);
+    }
+
+    public JSONObject getDataJson() {
 
         return blejson;
     }

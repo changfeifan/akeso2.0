@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.akeso.akeso20.R;
 import com.akeso.akeso20.ble.BleInfo;
+import com.akeso.akeso20.ble.BluetoothLeService;
 import com.akeso.akeso20.ble.CheckBleInstanse;
 
 /**
@@ -16,6 +17,11 @@ import com.akeso.akeso20.ble.CheckBleInstanse;
 public class GlassActivity extends Activity implements View.OnClickListener {
     private BleInfo bleInfo;
     private TextView tv_name;
+    private TextView tv_serial;
+    CheckBleInstanse checkBleInstanse = CheckBleInstanse.getInstance();
+
+
+
 
     public static void show(Activity activity, String deviceName, String deviceAddress) {
         BleInfo bleInfo = new BleInfo();
@@ -36,7 +42,14 @@ public class GlassActivity extends Activity implements View.OnClickListener {
 
         setView();
 
-        CheckBleInstanse.getInstance().CheckBle();
+        checkBleInstanse.setContext(this);
+
+//        if (CheckBleInstanse.getInstance().CheckBle()){
+//        CheckBleInstanse.getInstance().startConnect(bleInfo.name, bleInfo.address);
+//        }
+//        CheckBleInstanse.getInstance().text(bleInfo.address);
+
+
     }
 
     private void setView() {
@@ -45,8 +58,28 @@ public class GlassActivity extends Activity implements View.OnClickListener {
 
         tv_name = (TextView) findViewById(R.id.tv_name);
         tv_name.setText(bleInfo.name);
+        tv_serial = (TextView) findViewById(R.id.tv_serial);
+        tv_serial.setText(bleInfo.address);
 
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkBleInstanse.setContext(GlassActivity.this);
+        checkBleInstanse.registerReceive();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        checkBleInstanse.unRegisterReceive();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        checkBleInstanse.unBindBleDevice();
     }
 
     @Override
@@ -59,4 +92,8 @@ public class GlassActivity extends Activity implements View.OnClickListener {
                 break;
         }
     }
+
+    private BluetoothLeService mBluetoothLeService;
+
+
 }

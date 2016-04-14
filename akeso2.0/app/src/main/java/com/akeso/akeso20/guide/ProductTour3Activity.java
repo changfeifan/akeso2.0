@@ -19,8 +19,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.akeso.akeso20.DrawerActivity;
 import com.akeso.akeso20.R;
+import com.akeso.akeso20.ble.BleListActivity;
 import com.nineoldandroids.view.ViewHelper;
 
 
@@ -159,7 +159,8 @@ public class ProductTour3Activity extends AppCompatActivity {
     }
 
     private void endTutorial() {
-        DrawerActivity.show(this);
+//        DrawerActivity.show(this);
+        BleListActivity.show(ProductTour3Activity.this);
         finish();
 //        overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
     }

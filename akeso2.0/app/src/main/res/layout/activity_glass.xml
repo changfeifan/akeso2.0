@@ -117,7 +117,7 @@
                 android:id="@+id/tv_battery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="30%"
+                android:text="等待获取……"
                 android:textColor="@color/text_black"
                 android:textSize="12dp" />
         </LinearLayout>

@@ -20,7 +20,7 @@
         </activity>
 
         <activity
-            android:name=".DrawerActivity"
+            android:name=".ble.DrawerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <activity
@@ -44,6 +44,9 @@
         <activity
             android:name=".activity.GlassActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <service android:name=".ble.BluetoothLeService" android:enabled="true"/>
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -55,4 +58,9 @@
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
 
+    <receiver android:name=".BluetoothConnectActivityReceiver" >
+        <intent-filter>
+            <action android:name="android.bluetooth.device.action.PAIRING_REQUEST" />
+        </intent-filter>
+    </receiver>
 </manifest>
