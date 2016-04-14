@@ -27,8 +27,8 @@ public class Active4Activity extends Activity {
 
         SharedPreferences mySharedPreferences = getSharedPreferences("test",
                 Activity.MODE_PRIVATE);
-        if (!mySharedPreferences.getString("name", "").equals("")
-                || !mySharedPreferences.getString("address", "").equals("")) {
+        if (mySharedPreferences.getString("name", "").equals("")
+                || mySharedPreferences.getString("address", "").equals("")) {
             iv_content.setImageResource(R.drawable.guide_4_1);
             tv_heading.setText("设备尚未连接");
             tv_content.setText("您的设备尚未链接，您可以进入主界面后\n点击右上角图标尝试重新链接。");

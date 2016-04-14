@@ -31,6 +31,7 @@ import com.akeso.akeso20.R;
 import com.akeso.akeso20.active.ActiveActivity;
 import com.akeso.akeso20.activity.AboutActivity;
 import com.akeso.akeso20.activity.FileActivity;
+import com.akeso.akeso20.activity.GlassActivity;
 import com.akeso.akeso20.activity.HelpActivity;
 import com.akeso.akeso20.activity.PersonalActivity;
 import com.akeso.akeso20.fragment.VisualBurdenViewFragment;
@@ -204,6 +205,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
             bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
         }
 
+
     }
 
     public void initLeftLayout() {
@@ -257,7 +259,11 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.iv_device:
-                        ActiveActivity.show(DrawerActivity.this);
+                        if (mDeviceAddress.equals("") || mDeviceName.equals("")) {
+                            ActiveActivity.show(DrawerActivity.this);
+                        } else {
+                            GlassActivity.show(DrawerActivity.this);
+                        }
                         break;
                     case R.id.tv_update:
                         update();
@@ -340,6 +346,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                 openLeftLayout();
                 break;
             case R.id.id_right_openBtn:
+                update();
                 openRightLayout();
                 break;
 
@@ -502,6 +509,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
             try {
                 if (data.getUuid().equals(SampleGattAttributes.Characteristics_Status_information_data)) {
                     Log.e("信息", " 电量：" + data.getData()[0] + " 各个状态： " + data.getData()[1]);
+                    sharedPreferences.edit().putString("battery", data.getData()[0] + "").commit();
                 } else if (data.getUuid().equals(SampleGattAttributes.Characteristics_Ultraviolet_light_sensor_data)) {
                     int lux = 0;
                     if ((data.getData()[1] << 8 | data.getData()[2]) < 0) {
@@ -514,6 +522,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                 } else if (data.getUuid().equals(SampleGattAttributes.Characteristics_Temperature_and_humidity_sensor_data)) {
                     Log.e("信息", " 温度：" + data.getData()[0] + " 湿度： " + data.getData()[1]);
                     getIntent().putExtra("humidity", data.getData()[1] + "");
+                    update();
 
                 } else if (data.getUuid().equals(SampleGattAttributes.Characteristics_Acceleration_sensor_data)) {
                     Log.e("信息", " 加速度：" + data.getData()[0] + " x轴：" + byteToInt(data.getData()[1]) + byteToInt(data.getData()[2]) + " y轴" +
@@ -538,24 +547,39 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-        if (mBluetoothLeService != null) {
-            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
-            Log.d(TAG, "Connect request result=" + result);
+        mDeviceName = sharedPreferences.getString("name", "");
+        mDeviceAddress = sharedPreferences.getString("address", "");
+        if (!mDeviceAddress.equals("")){
+            registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+            if (mBluetoothLeService != null) {
+                final boolean result = mBluetoothLeService.connect(mDeviceAddress);
+                Log.d(TAG, "Connect request result=" + result);
+            }
+        }else {
+            iv_mRightMenu.setImageResource(R.drawable.no_connect);
+            Toast.makeText(DrawerActivity.this,"设备未绑定，请点击右侧按钮连接。",Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(mGattUpdateReceiver);
+        if (mDeviceAddress.equals("")){
+        }else {
+            unregisterReceiver(mGattUpdateReceiver);
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(mServiceConnection);
-        mBluetoothLeService = null;
+        if (mDeviceAddress.equals("")){
+
+        }else {
+            unbindService(mServiceConnection);
+            mBluetoothLeService = null;
+        }
     }
 
     public static int byteToInt(byte b) {

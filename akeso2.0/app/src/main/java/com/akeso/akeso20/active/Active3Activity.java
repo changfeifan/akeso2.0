@@ -105,7 +105,19 @@ public class Active3Activity extends Activity {
                 editor.putString("name", device.getName());
                 editor.putString("address", device.getAddress());
                 editor.commit();
-                Toast.makeText(Active3Activity.this, "已绑定该设备,请点击下一步。", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Active3Activity.this, "已绑定该设备.", Toast.LENGTH_SHORT).show();
+                if (mScanning) {
+                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    mScanning = false;
+                    try {
+                        Thread.sleep(1000);
+                        Active4Activity.show(Active3Activity.this);
+//                        Toast.makeText(Active3Activity.this, "已绑定该设备,请点击下一步。", Toast.LENGTH_SHORT).show();
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
             }
         });
     }
