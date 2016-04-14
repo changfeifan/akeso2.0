@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/welcome_fragment"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="5"
+    android:background="@drawable/background_guide"
+    android:clipChildren="false"
+    android:orientation="vertical"
+    android:paddingTop="10dp">
+    <LinearLayout
+        android:id="@+id/images"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_margin="30dp"
+        android:layout_weight="3"
+        android:background="@drawable/sharp_white"
+        android:clipChildren="false"
+        android:orientation="vertical"
+        android:gravity="center">
+
+
+        <ImageView
+            android:id="@+id/welcome_num"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_margin="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/guide_num_3"
+            android:layout_weight="1"
+            />
+
+        <ImageView
+            android:id="@+id/welcome_content"
+            android:layout_width="200dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:src="@drawable/guide_2"
+            android:layout_weight="1"
+            />
+
+
+        <ListView
+            android:id="@+id/lv_ble_device"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/sharp_gray"
+            android:padding="10dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+
+    <TextView
+        android:id="@+id/tv_next"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/sharp_blue"
+        android:gravity="center"
+        android:text="下一步"
+        android:textColor="@color/white"
+        android:textSize="14dp" />
+
+</LinearLayout>

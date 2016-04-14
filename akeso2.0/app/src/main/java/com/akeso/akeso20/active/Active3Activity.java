@@ -1,4 +1,4 @@
-package com.akeso.akeso20.ble;
+package com.akeso.akeso20.active;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -24,9 +24,9 @@ import com.akeso.akeso20.R;
 import java.util.ArrayList;
 
 /**
- * Created by changfeifan on 16/4/6.
+ * Created by changfeifan on 16/4/14.
  */
-public class BleListActivity extends Activity {
+public class Active3Activity extends Activity {
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
@@ -34,17 +34,31 @@ public class BleListActivity extends Activity {
     ListView lv_ble_device;
 
     private static final int REQUEST_ENABLE_BT = 1;
-    private static final long SCAN_PERIOD = 30000;
-
-    public static void show(Activity activity) {
-        Intent intent = new Intent(activity, BleListActivity.class);
-        activity.startActivity(intent);
-    }
+    private static final long SCAN_PERIOD = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ble);
+        setContentView(R.layout.activity_active_3);
+
+        findViewById(R.id.tv_next).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mScanning) {
+                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    mScanning = false;
+                    try {
+                        Thread.sleep(1000);
+//                        DrawerActivity.show(Active3Activity.this);
+//                        Toast.makeText(Active3Activity.this, "已绑定该设备,请点击下一步。", Toast.LENGTH_SHORT).show();
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+                Active4Activity.show(Active3Activity.this);
+            }
+        });
 
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
@@ -65,7 +79,13 @@ public class BleListActivity extends Activity {
             finish();
             return;
         }
+
         setView();
+    }
+
+    public static void show(Activity activity) {
+        Intent intent = new Intent(activity, Active3Activity.class);
+        activity.startActivity(intent);
     }
 
     void setView() {
@@ -85,21 +105,9 @@ public class BleListActivity extends Activity {
                 editor.putString("name", device.getName());
                 editor.putString("address", device.getAddress());
                 editor.commit();
-                if (mScanning) {
-                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
-                    mScanning = false;
-                    try {
-                        Thread.sleep(1000);
-                        DrawerActivity.show(BleListActivity.this);
-
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
+                Toast.makeText(Active3Activity.this, "已绑定该设备,请点击下一步。", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     @Override
@@ -157,7 +165,7 @@ public class BleListActivity extends Activity {
         public LeDeviceListAdapter() {
             super();
             mLeDevices = new ArrayList<BluetoothDevice>();
-            mInflator = BleListActivity.this.getLayoutInflater();
+            mInflator = Active3Activity.this.getLayoutInflater();
         }
 
         public void addDevice(BluetoothDevice device) {
@@ -224,7 +232,7 @@ public class BleListActivity extends Activity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (device.getName().substring(0, 5).toLowerCase().equals("akeso")) {
+                            if (device.getName() != null && device.getName().length() > 5 && device.getName().substring(0, 5).toLowerCase().equals("akeso")) {
                                 mLeDeviceListAdapter.addDevice(device);
                                 mLeDeviceListAdapter.notifyDataSetChanged();
                             }

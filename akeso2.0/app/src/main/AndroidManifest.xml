@@ -44,21 +44,37 @@
         <activity
             android:name=".activity.GlassActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-
-        <service android:name=".ble.BluetoothLeService" android:enabled="true"/>
+        <activity
+            android:name=".active.ActiveActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".active.Active2Activity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".active.Active3Activity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".active.Active4Activity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <service
+            android:name=".ble.BluetoothLeService"
+            android:enabled="true" />
 
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
 
-    <receiver android:name=".BluetoothConnectActivityReceiver" >
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
+    <receiver android:name=".BluetoothConnectActivityReceiver">
         <intent-filter>
             <action android:name="android.bluetooth.device.action.PAIRING_REQUEST" />
         </intent-filter>

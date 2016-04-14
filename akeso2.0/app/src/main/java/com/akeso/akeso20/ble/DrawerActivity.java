@@ -28,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.akeso.akeso20.R;
+import com.akeso.akeso20.active.ActiveActivity;
 import com.akeso.akeso20.activity.AboutActivity;
 import com.akeso.akeso20.activity.FileActivity;
 import com.akeso.akeso20.activity.HelpActivity;
@@ -66,9 +67,6 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
     private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
             new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
     private boolean mConnected = false;
-    private BluetoothGattCharacteristic mNotifyCharacteristic;
-    private BluetoothGattCharacteristic mNotifyUvCharacteristic;
-//    private BluetoothGattCharacteristic mNotifyCharacteristic;
 
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
@@ -199,8 +197,13 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
         leftMenulayout.setOnTouchListener(this);
         rightMessagelayout.setOnTouchListener(this);
 
-        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
-        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        if (mDeviceAddress.equals("") || mDeviceAddress == null) {
+            Toast.makeText(this, "尚未选择连接设备，请点击右侧按钮选择镜框。", Toast.LENGTH_LONG).show();
+        } else {
+            Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
+            bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        }
+
     }
 
     public void initLeftLayout() {
@@ -254,7 +257,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.iv_device:
-                        BleListActivity.show(DrawerActivity.this);
+                        ActiveActivity.show(DrawerActivity.this);
                         break;
                     case R.id.tv_update:
                         update();
@@ -383,12 +386,14 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                 mConnected = true;
                 Log.e(getClass().toString(), BluetoothLeService.ACTION_GATT_CONNECTED);
                 Toast.makeText(DrawerActivity.this, "已连接设备", Toast.LENGTH_SHORT).show();
+                iv_mRightMenu.setImageResource(R.drawable.normal);
 //                updateConnectionState(R.string.connected);
 //                invalidateOptionsMenu();
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
                 Log.e(getClass().toString(), BluetoothLeService.ACTION_GATT_DISCONNECTED);
                 Toast.makeText(DrawerActivity.this, "失去连接，等待重连", Toast.LENGTH_SHORT).show();
+                iv_mRightMenu.setImageResource(R.drawable.no_connect);
 //                updateConnectionState(R.string.disconnected);
 //                clearUI();
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
@@ -511,7 +516,9 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                     getIntent().putExtra("humidity", data.getData()[1] + "");
 
                 } else if (data.getUuid().equals(SampleGattAttributes.Characteristics_Acceleration_sensor_data)) {
-                    Log.e("信息", " 加速度：" + data.getData()[0]);
+                    Log.e("信息", " 加速度：" + data.getData()[0] + " x轴：" + byteToInt(data.getData()[1]) + byteToInt(data.getData()[2]) + " y轴" +
+                            "" + byteToInt(data.getData()[3]) + byteToInt(data.getData()[4]) + "" +
+                            " z轴：" + byteToInt(data.getData()[5]) + byteToInt(data.getData()[6]) + " 角度值：" + byteToInt(data.getData()[7]));
                     getIntent().putExtra("neck", data.getData()[0] + "");
                 }
             } catch (Exception e) {
@@ -549,6 +556,21 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
         super.onDestroy();
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
+    }
+
+    public static int byteToInt(byte b) {
+        return Integer.valueOf(byteToBit(b), 2);
+    }
+
+    public static String byteToBit(byte b) {
+        return "" + (byte) ((b >> 7) & 0x1) +
+                (byte) ((b >> 6) & 0x1) +
+                (byte) ((b >> 5) & 0x1) +
+                (byte) ((b >> 4) & 0x1) +
+                (byte) ((b >> 3) & 0x1) +
+                (byte) ((b >> 2) & 0x1) +
+                (byte) ((b >> 1) & 0x1) +
+                (byte) ((b >> 0) & 0x1);
     }
 
 }

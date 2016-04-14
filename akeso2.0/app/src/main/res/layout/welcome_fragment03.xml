@@ -22,8 +22,6 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal|top"
             android:padding="30dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
             android:scaleType="centerInside"
             android:src="@drawable/sharp_white" />
 
@@ -40,43 +38,22 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="100dp"
             android:src="@drawable/guide_3" />
 
-        <LinearLayout
+        <ListView
+            android:id="@+id/lv_ble_device"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:orientation="vertical"
-            android:paddingBottom="60dp">
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="90dp"
+            android:padding="20dp"
+            android:background="@drawable/sharp_gray">
 
-            <TextView
-                android:id="@+id/heading"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="bottom|center_horizontal"
-                android:paddingBottom="10dp"
-                android:paddingLeft="24dp"
-                android:paddingRight="24dp"
-                android:text="开始配对连接"
-                android:textAppearance="@style/WelcomeHeadingAppearance"
-                android:textColor="@color/black" />
+        </ListView>
 
-            <TextView
-                android:id="@+id/content"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="top|center_horizontal"
-                android:minHeight="@dimen/welcome_content_min_height"
-                android:paddingLeft="24dp"
-                android:paddingRight="24dp"
-                android:text="搜索到设备后，\n开始进行匹配。"
-                android:textAppearance="@style/WelcomeContentAppearance"
-                android:textColor="@color/text_gray"
-                android:textSize="14dp" />
-        </LinearLayout>
 
     </FrameLayout>
 
