@@ -28,7 +28,7 @@ public class FileActivity extends Activity implements View.OnClickListener {
     private void setView() {
         tv_title = (TextView) findViewById(R.id.tv_title);
         if (getIntent().getStringExtra("name") != null)
-            tv_title.setText(getIntent().getStringExtra("name") + "的健康档案");
+            tv_title.setText(getIntent().getStringExtra("name") + "的验光数据");
 
     }
 

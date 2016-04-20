@@ -23,6 +23,7 @@ public class SettingActivity extends Activity implements View.OnClickListener {
 
         findViewById(R.id.iv_back).setOnClickListener(this);
 
+        
     }
 
     public static void show(Activity activity) {

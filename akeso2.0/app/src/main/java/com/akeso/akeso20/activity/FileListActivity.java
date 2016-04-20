@@ -103,7 +103,7 @@ public class FileListActivity extends Activity {
                 ll_filelist=(LinearLayout)convertView.findViewById(R.id.ll_filelist);
                 tv_name = (TextView) convertView.findViewById(R.id.tv_name);
                 tv_click = (TextView) convertView.findViewById(R.id.tv_click);
-                tv_name.setText(object.getString("name") + "的健康档案");
+                tv_name.setText(object.getString("name") + "的验光数据");
 //                tv_click.setText(object.getString("click"));
 
                 ll_filelist.setOnClickListener(new View.OnClickListener() {
