@@ -33,7 +33,7 @@ import com.akeso.akeso20.R;
 import com.akeso.akeso20.active.ActiveActivity;
 import com.akeso.akeso20.activity.AboutActivity;
 import com.akeso.akeso20.activity.ApartmentActivity;
-import com.akeso.akeso20.activity.FileActivity;
+import com.akeso.akeso20.activity.FileListActivity;
 import com.akeso.akeso20.activity.GlassActivity;
 import com.akeso.akeso20.activity.PersonalActivity;
 import com.akeso.akeso20.activity.SettingActivity;
@@ -229,7 +229,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                         SettingActivity.show(DrawerActivity.this);
                         break;
                     case R.id.ll_file:
-                        FileActivity.show(DrawerActivity.this);
+                        FileListActivity.show(DrawerActivity.this);
                         break;
                     case R.id.ll_about:
                         AboutActivity.show(DrawerActivity.this);

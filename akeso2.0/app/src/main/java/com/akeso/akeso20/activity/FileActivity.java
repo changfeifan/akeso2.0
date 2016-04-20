@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.akeso.akeso20.R;
 
@@ -12,6 +13,8 @@ import com.akeso.akeso20.R;
  */
 public class FileActivity extends Activity implements View.OnClickListener {
 
+    TextView tv_title;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,10 +22,19 @@ public class FileActivity extends Activity implements View.OnClickListener {
 
         findViewById(R.id.iv_back).setOnClickListener(this);
 
+        setView();
     }
 
-    public static void show(Activity activity) {
+    private void setView() {
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        if (getIntent().getStringExtra("name") != null)
+            tv_title.setText(getIntent().getStringExtra("name") + "的健康档案");
+
+    }
+
+    public static void show(Activity activity, String name) {
         Intent intent = new Intent(activity, FileActivity.class);
+        intent.putExtra("name", name);
         activity.startActivity(intent);
     }
 
