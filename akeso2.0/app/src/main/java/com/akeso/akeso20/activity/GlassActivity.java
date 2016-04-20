@@ -76,7 +76,7 @@ public class GlassActivity extends Activity implements View.OnClickListener {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("name", "");
                 editor.putString("address", "");
-                editor.putString("battery","等待获取…");
+                editor.putString("battery","0");
                 editor.commit();
 
 //                ActiveActivity.show(GlassActivity.this);

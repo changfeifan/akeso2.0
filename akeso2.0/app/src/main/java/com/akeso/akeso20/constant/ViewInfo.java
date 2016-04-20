@@ -16,6 +16,15 @@ public class ViewInfo {
     String data = "暂无";
     int background_color = R.color.text_gray;
 
+    public int getFace() {
+        return face;
+    }
+
+    public void setFace(int face) {
+        this.face = face;
+    }
+
+    int face = 1;
 
     public int getType() {
         return type;
@@ -84,18 +93,20 @@ public class ViewInfo {
         jsonObject.put("data", getData());
         jsonObject.put("background_color", getBackground_color());
         jsonObject.put("type", getType());
+        jsonObject.put("face", getFace());
         return jsonObject;
     }
 
     public ViewInfo JsontoViewInfo(JSONObject jsonObject) {
         ViewInfo info = new ViewInfo();
-        info.title = jsonObject.optString("title","");
-        info.content = jsonObject.optString("content","");
-        info.state = jsonObject.optInt("state",0);
-        info.timeInfo = jsonObject.optString("timeInfo","");
-        info.data = jsonObject.optString("data","暂无");
+        info.title = jsonObject.optString("title", "");
+        info.content = jsonObject.optString("content", "");
+        info.state = jsonObject.optInt("state", 0);
+        info.timeInfo = jsonObject.optString("timeInfo", "");
+        info.data = jsonObject.optString("data", "暂无");
         info.background_color = jsonObject.optInt("background_color", R.color.background_gray);
         info.type = jsonObject.optInt("type", 1);
+        info.face = jsonObject.optInt("face", 1);
         return info;
     }
 }

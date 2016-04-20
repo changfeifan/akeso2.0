@@ -24,16 +24,19 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.akeso.akeso20.R;
 import com.akeso.akeso20.active.ActiveActivity;
 import com.akeso.akeso20.activity.AboutActivity;
+import com.akeso.akeso20.activity.ApartmentActivity;
 import com.akeso.akeso20.activity.FileActivity;
 import com.akeso.akeso20.activity.GlassActivity;
-import com.akeso.akeso20.activity.HelpActivity;
 import com.akeso.akeso20.activity.PersonalActivity;
+import com.akeso.akeso20.activity.SettingActivity;
 import com.akeso.akeso20.fragment.VisualBurdenViewFragment;
 import com.akeso.akeso20.fragment.VisualEnvirmentViewFragment;
 import com.akeso.akeso20.fragment.VisualHabitViewFragment;
@@ -68,7 +71,6 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
     private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
             new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
     private boolean mConnected = false;
-
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
 
@@ -224,7 +226,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                         mDrawerLayout.closeDrawer(leftMenulayout);
                         break;
                     case R.id.ll_help:
-                        HelpActivity.show(DrawerActivity.this);
+                        SettingActivity.show(DrawerActivity.this);
                         break;
                     case R.id.ll_file:
                         FileActivity.show(DrawerActivity.this);
@@ -234,9 +236,14 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                         break;
                     case R.id.ll_person:
                         PersonalActivity.show(DrawerActivity.this);
+                        break;
+                    case R.id.ll_apart:
+                        ApartmentActivity.show(DrawerActivity.this);
+                        break;
                     default:
                         break;
                 }
+
             }
         };
         view2.setOnClickListener(listener);
@@ -245,6 +252,8 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
         view2.findViewById(R.id.ll_file).setOnClickListener(listener);
         view2.findViewById(R.id.ll_about).setOnClickListener(listener);
         view2.findViewById(R.id.ll_person).setOnClickListener(listener);
+        view2.findViewById(R.id.ll_apart).setOnClickListener(listener);
+
     }
 
     public void initRightLayout() {
@@ -276,6 +285,8 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
         view.setOnClickListener(listener);
         view.findViewById(R.id.iv_device).setOnClickListener(listener);
         view.findViewById(R.id.tv_update).setOnClickListener(listener);
+
+
     }
 
     private void initEvent() {
@@ -338,6 +349,16 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    public void closeAllLayout() {
+
+        if (mDrawerLayout.isDrawerOpen(rightMessagelayout)) {
+            mDrawerLayout.closeDrawer(rightMessagelayout);
+        }
+        if (mDrawerLayout.isDrawerOpen(leftMenulayout)) {
+            mDrawerLayout.closeDrawer(leftMenulayout);
+        }
+    }
+
     @Override
     public void onClick(View v) {
 
@@ -348,10 +369,43 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.id_right_openBtn:
                 update();
                 openRightLayout();
+                updateRightLayout();
                 break;
 
             default:
                 break;
+        }
+
+    }
+
+    private void updateRightLayout() {
+        View view = rightMessagelayout.getChildAt(0);
+        TextView tv_charge_time = (TextView) view.findViewById(R.id.tv_charge_time);
+        LinearLayout ll_battery_info = (LinearLayout) view.findViewById(R.id.ll_battery_info);
+        ImageView iv_device = (ImageView) view.findViewById(R.id.iv_device);
+        if (mDeviceAddress.equals("")) {
+            iv_device.setImageResource(R.drawable.ic_right_disconnect);
+            tv_charge_time.setText("未连接");
+            ll_battery_info.setVisibility(View.INVISIBLE);
+        } else {
+            iv_device.setImageResource(R.drawable.ic_right);
+            tv_charge_time.setText("上次同步时间  今天 上午2:31");
+            ll_battery_info.setVisibility(View.VISIBLE);
+
+            ImageView iv_battery = (ImageView) view.findViewById(R.id.iv_battery);
+            TextView tv_battery = (TextView) view.findViewById(R.id.tv_battery);
+            if (!sharedPreferences.getString("battery", "").equals("")) {
+                int num = Integer.valueOf(sharedPreferences.getString("battery", ""));
+                tv_battery.setText("电池：" + num + "%");
+
+                if (num > 66) {
+                    iv_battery.setImageResource(R.drawable.state_full);
+                } else if (num < 33) {
+                    iv_battery.setImageResource(R.drawable.state_low_energy);
+                } else {
+                    iv_battery.setImageResource(R.drawable.state_half);
+                }
+            }
         }
 
     }
@@ -410,6 +464,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                 displayGattServices(mBluetoothLeService.getSupportedGattServices());
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 Toast.makeText(DrawerActivity.this, "得到数据", Toast.LENGTH_SHORT).show();
+                iv_mRightMenu.setImageResource(R.drawable.normal);
                 Log.e(getClass().toString(), BluetoothLeService.ACTION_DATA_AVAILABLE);
                 UuidValue uuidValue = (UuidValue) intent.getExtras().get("uuid");
                 displayData(uuidValue);
@@ -511,14 +566,14 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                     Log.e("信息", " 电量：" + data.getData()[0] + " 各个状态： " + data.getData()[1]);
                     sharedPreferences.edit().putString("battery", data.getData()[0] + "").commit();
                 } else if (data.getUuid().equals(SampleGattAttributes.Characteristics_Ultraviolet_light_sensor_data)) {
-                    int lux = 0;
-                    if ((data.getData()[1] << 8 | data.getData()[2]) < 0) {
-                        lux = (data.getData()[1] << 8 | data.getData()[2]) + 256;
-                    } else {
-                        lux = (data.getData()[1] << 8 | data.getData()[2]);
-                    }
-                    Log.e("信息", " UV：" + data.getData()[0] + " 光强： " + lux);
-                    getIntent().putExtra("light", lux + "/" + data.getData()[0]);
+//                    int lux = 0;
+//                    if ((data.getData()[1] << 8 | data.getData()[2]) < 0) {
+//                        lux = (data.getData()[1] << 8 | data.getData()[2]) + 256;
+//                    } else {
+//                        lux = (data.getData()[1] << 8 | data.getData()[2]);
+//                    }
+                    Log.e("信息", " UV：" + data.getData()[0] + " 光强： " + byteToInt(data.getData()[1]) + byteToInt(data.getData()[2]));
+                    getIntent().putExtra("light", byteToInt(data.getData()[1]) + byteToInt(data.getData()[2]) + "/" + data.getData()[0]);
                 } else if (data.getUuid().equals(SampleGattAttributes.Characteristics_Temperature_and_humidity_sensor_data)) {
                     Log.e("信息", " 温度：" + data.getData()[0] + " 湿度： " + data.getData()[1]);
                     getIntent().putExtra("humidity", data.getData()[1] + "");
@@ -529,6 +584,8 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                             "" + byteToInt(data.getData()[3]) + byteToInt(data.getData()[4]) + "" +
                             " z轴：" + byteToInt(data.getData()[5]) + byteToInt(data.getData()[6]) + " 角度值：" + byteToInt(data.getData()[7]));
                     getIntent().putExtra("neck", data.getData()[0] + "");
+                    getIntent().putExtra("angle", data.getData()[7] + "");
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -549,34 +606,34 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
         super.onResume();
         mDeviceName = sharedPreferences.getString("name", "");
         mDeviceAddress = sharedPreferences.getString("address", "");
-        if (!mDeviceAddress.equals("")){
+        if (!mDeviceAddress.equals("")) {
             registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
             if (mBluetoothLeService != null) {
                 final boolean result = mBluetoothLeService.connect(mDeviceAddress);
                 Log.d(TAG, "Connect request result=" + result);
             }
-        }else {
+        } else {
             iv_mRightMenu.setImageResource(R.drawable.no_connect);
-            Toast.makeText(DrawerActivity.this,"设备未绑定，请点击右侧按钮连接。",Toast.LENGTH_SHORT).show();
+            Toast.makeText(DrawerActivity.this, "设备未绑定，请点击右侧按钮连接。", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mDeviceAddress.equals("")){
-        }else {
+        if (mDeviceAddress.equals("")) {
+        } else {
             unregisterReceiver(mGattUpdateReceiver);
         }
+        closeAllLayout();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mDeviceAddress.equals("")){
+        if (mDeviceAddress.equals("")) {
 
-        }else {
+        } else {
             unbindService(mServiceConnection);
             mBluetoothLeService = null;
         }

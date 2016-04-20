@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="7dp"
-            android:text="用户信息"
+            android:text="首页"
             android:textColor="@color/black" />
     </LinearLayout>
 
@@ -74,6 +74,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_apart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -108,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="7dp"
-            android:text="帮助和设置"
+            android:text="个人设置"
             android:textColor="@color/black" />
     </LinearLayout>
 

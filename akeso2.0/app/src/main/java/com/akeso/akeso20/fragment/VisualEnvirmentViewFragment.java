@@ -55,7 +55,7 @@ public class VisualEnvirmentViewFragment extends Fragment {
 
         baseDate();
 
-        testRecyclerViewAdapter = new TestRecyclerViewAdapter(getActivity(),array);
+        testRecyclerViewAdapter = new TestRecyclerViewAdapter(getActivity(), array);
         mAdapter = new RecyclerViewMaterialAdapter(testRecyclerViewAdapter);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -74,7 +74,7 @@ public class VisualEnvirmentViewFragment extends Fragment {
         try {
             array.put(viewInfo_humidity.getJsonObject());
             array.put(viewInfo_illumination.getJsonObject());
-            array.put(viewInfo_null.getJsonObject());
+//            array.put(viewInfo_null.getJsonObject());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -93,15 +93,53 @@ public class VisualEnvirmentViewFragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            handler.postDelayed(runnable, 3000);
+            handler.postDelayed(runnable, 1000);
 
         }
     };
 
     public void reset(String str1, String str2) {
         try {
-            array.getJSONObject(0).put("data", str2 + "%");
-            array.getJSONObject(1).put("data", str1 + "");
+
+            if (str1 != null && !str1.equals("null")) {
+                int light = Integer.valueOf(str1.split("/")[0]);
+                if (light < 100) {
+                    array.getJSONObject(1).put("data", str1);
+                    array.getJSONObject(1).put("face", 2);
+                    array.getJSONObject(1).put("timeInfo", "过弱");
+                    array.getJSONObject(1).put("content", "您目前所处环境光强过弱，如您在这样的环境中长时间用眼，尤其是使用电子设备或者近距离阅读文字，会造成眼部不适和视疲劳，请您加设光线柔和的台灯或者改善室内照明亮度。");
+                } else if (light >= 100 && light < 500) {
+                    array.getJSONObject(1).put("data", str1);
+                    array.getJSONObject(1).put("face", 1);
+                    array.getJSONObject(1).put("timeInfo", "适宜");
+                    array.getJSONObject(1).put("content", "您目前所处环境光强适当，可以安心在此环境中工作生活。");
+                } else {
+                    array.getJSONObject(1).put("data", str1);
+                    array.getJSONObject(1).put("face", 2);
+                    array.getJSONObject(1).put("timeInfo", "过强");
+                    array.getJSONObject(1).put("content", "您目前所处环境光强过强，如在此环境中长时间近距离用眼可能会造成眼睛眩光和视疲劳，如为室内请您改善照明环境，为灯具加设灯罩，如为室外请您佩戴墨镜保护眼睛");
+                }
+            }
+            if (str2 != null && !str2.equals("null")) {
+                int light = Integer.valueOf(str2);
+                if (light > 60) {
+                    array.getJSONObject(0).put("data", str2 + "%");
+                    array.getJSONObject(0).put("timeInfo", "过度湿润");
+                    array.getJSONObject(0).put("content", "您目前的眼周湿度过湿，请您保持室内空气流通，并打开空调除湿。");
+                    array.getJSONObject(0).put("face", 2);
+                } else if (light < 40) {
+                    array.getJSONObject(0).put("data", str2 + "%");
+                    array.getJSONObject(0).put("content", "您目前的眼周湿度过干，处理不当会严重威胁眼部健康。请您打开加湿器改善室内空气湿度，用1分钟的时间做20次完全瞬目，并用温毛巾热敷眼部10分钟。如您感觉眼睛干涩症状严重，可适当补充人工泪液滴眼液缓解症状，如长期使用，请您选用无防腐剂的人工泪液制剂。");
+                    array.getJSONObject(0).put("face", 2);
+                    array.getJSONObject(0).put("timeInfo", "干涩");
+                } else {
+                    array.getJSONObject(0).put("data", str2 + "%");
+                    array.getJSONObject(0).put("content", "您目前的眼周湿度适宜，请您继续保持，长时间使用电子设备时不要忘记眨眼哦。");
+                    array.getJSONObject(0).put("face", 1);
+                    array.getJSONObject(0).put("timeInfo", "适宜");
+
+                }
+            }
             testRecyclerViewAdapter.setArray(array);
             mAdapter.notifyDataSetChanged();
 

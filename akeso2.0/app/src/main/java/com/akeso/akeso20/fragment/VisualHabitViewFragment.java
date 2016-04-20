@@ -28,7 +28,7 @@ public class VisualHabitViewFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
 
     private JSONArray array = new JSONArray();
-    private TestRecyclerViewAdapter testRecyclerViewAdapter=new TestRecyclerViewAdapter(getActivity(),array);
+    private TestRecyclerViewAdapter testRecyclerViewAdapter = new TestRecyclerViewAdapter(getActivity(), array);
     private ViewInfo viewInfo_neck = new ViewInfo();
     private ViewInfo viewInfo_neckstrain = new ViewInfo();
     private ViewInfo viewInfo_null = new ViewInfo();
@@ -72,7 +72,7 @@ public class VisualHabitViewFragment extends Fragment {
 
         try {
             array.put(viewInfo_neck.getJsonObject());
-            array.put(viewInfo_neckstrain.getJsonObject());
+//            array.put(viewInfo_neckstrain.getJsonObject());
             array.put(viewInfo_null.getJsonObject());
 
         } catch (JSONException e) {
@@ -91,27 +91,33 @@ public class VisualHabitViewFragment extends Fragment {
         public void run() {
             try {
                 handler.postDelayed(this, 1000);
-                reset(getActivity().getIntent().getStringExtra("neck"));
+               if (getActivity().getIntent().getStringExtra("neck") != null && getActivity().getIntent().getStringExtra("angle") != null)
+                    reset(getActivity().getIntent().getStringExtra("neck"), getActivity().getIntent().getStringExtra("angle"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     };
 
-    public void reset(String str) {
+    public void reset(String str, String angle) {
         try {
-            if (str.equals("")||str==null){
+            if (str.equals("") || str == null) {
                 return;
             }
+            viewInfo_neck.setData(angle + "°");
+            array.getJSONObject(0).put("data", angle + '°');
             if (str.equals("96")) {
-                viewInfo_neck.setData("正常");
-                array.getJSONObject(0).put("data", "正常");
+                array.getJSONObject(0).put("content", "目前状态良好，请继续保持");
+                array.getJSONObject(0).put("face",1);
+                array.getJSONObject(0).put("timeInfo", "良好");
             } else if (str.equals("97")) {
-                viewInfo_neck.setData("低头");
-                array.getJSONObject(0).put("data", "低头");
+                array.getJSONObject(0).put("content", "请您在工作和学习时注意坐姿，尽量减少低头的角度和时间，并在工作1h后，活动颈部肌肉。");
+                array.getJSONObject(0).put("face",2);
+                array.getJSONObject(0).put("timeInfo", "适宜");
             } else if (str.equals("98")) {
-                viewInfo_neck.setData("抬头");
-                array.getJSONObject(0).put("data", "抬头");
+                array.getJSONObject(0).put("content", "当前用眼弧度过高，请您调整坐姿，为避免过度使用，建议工作30分钟后，活动颈部肌肉。");
+                array.getJSONObject(0).put("face",2);
+                array.getJSONObject(0).put("timeInfo", "不良");
 
             } else {
                 viewInfo_neck.setData("暂无");

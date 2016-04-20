@@ -1,6 +1,7 @@
 package com.akeso.akeso20;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,11 @@ import com.akeso.akeso20.ble.DrawerActivity;
 public class MainActivity extends Activity {
     private String mDeviceName;
     private String mDeviceAddress;
+
+    public static void show(Activity activity){
+        Intent intent=new Intent(activity,MainActivity.class);
+        activity.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
