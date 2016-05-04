@@ -21,7 +21,7 @@ public class GlassActivity extends Activity implements View.OnClickListener {
 
     public static void show(Activity activity) {
         Intent intent = new Intent(activity, GlassActivity.class);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, 1001);
     }
 
     @Override
@@ -45,8 +45,8 @@ public class GlassActivity extends Activity implements View.OnClickListener {
 
         tv_name.setText(sharedPreferences.getString("name", ""));
         tv_serial.setText(sharedPreferences.getString("address", ""));
-        if (!sharedPreferences.getString("battery", "").equals("")){
-            tv_battery.setText(sharedPreferences.getString("battery", "")+"%");
+        if (!sharedPreferences.getString("battery", "").equals("")) {
+            tv_battery.setText(sharedPreferences.getString("battery", "") + "%");
         }
         findViewById(R.id.tv_unpair).setOnClickListener(this);
     }
@@ -76,10 +76,11 @@ public class GlassActivity extends Activity implements View.OnClickListener {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("name", "");
                 editor.putString("address", "");
-                editor.putString("battery","0");
+                editor.putString("battery", "0");
                 editor.commit();
 
 //                ActiveActivity.show(GlassActivity.this);
+                setResult(RESULT_OK);
                 finish();
                 break;
             default:

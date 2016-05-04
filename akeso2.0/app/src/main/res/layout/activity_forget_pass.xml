@@ -11,15 +11,15 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical">
 
-        <TextView
+        <ImageView
+            android:id="@+id/iv_back"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:padding="10dp"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:text="注册"
-            android:textColor="@color/white"
-            android:textSize="14dp"
-            android:visibility="invisible" />
+            android:src="@drawable/ic_white_arrow"
+            android:visibility="visible" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,7 +38,8 @@
             android:gravity="center"
             android:text="登陆"
             android:textColor="@color/white"
-            android:textSize="14dp" />
+            android:textSize="14dp"
+            android:visibility="invisible"/>
     </LinearLayout>
 
     <LinearLayout
@@ -95,7 +96,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="密码"
+                android:text="新密码"
                 android:textColor="@color/text_gray"
                 android:textSize="14dp" />
 
@@ -130,7 +131,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="确认密码"
+                android:text="确认新密码"
                 android:textColor="@color/text_gray"
                 android:textSize="14dp" />
 
@@ -195,7 +196,7 @@
         android:layout_marginRight="30dp"
         android:background="@drawable/sharp_blue"
         android:gravity="center"
-        android:text="确认注册"
+        android:text="确认修改"
         android:textColor="@color/white"
         android:textSize="14dp" />
 

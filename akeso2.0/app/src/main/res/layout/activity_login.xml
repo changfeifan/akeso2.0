@@ -113,6 +113,80 @@
                 android:textSize="14dp" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="5dp"
+            android:background="@color/line_gray"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="确认密码"
+                android:textColor="@color/text_gray"
+                android:textSize="14dp" />
+
+            <EditText
+                android:id="@+id/et_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:gravity="right"
+                android:hint="至少6个数字"
+                android:padding="10dp"
+                android:textColor="@color/text_black"
+                android:textColorHint="@color/line_gray"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="5dp"
+            android:background="@color/line_gray"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/et_verify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:hint="填写验证码"
+                android:padding="10dp"
+                android:textColor="@color/text_black"
+                android:textColorHint="@color/line_gray"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/tv_verify"
+                android:layout_width="113dp"
+                android:layout_height="31dp"
+                android:background="@drawable/sharp_gray_deep"
+                android:gravity="center"
+                android:hint="发送验证码"
+                android:textColorHint="@color/line_gray"
+                android:textSize="14dp" />
+        </LinearLayout>
     </LinearLayout>
 
     <TextView
@@ -123,7 +197,7 @@
         android:layout_marginRight="30dp"
         android:background="@drawable/sharp_blue"
         android:gravity="center"
-        android:text="确认登陆"
+        android:text="确认登录"
         android:textColor="@color/white"
         android:textSize="14dp" />
 

@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -42,6 +43,9 @@ import com.akeso.akeso20.fragment.VisualEnvirmentViewFragment;
 import com.akeso.akeso20.fragment.VisualHabitViewFragment;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -76,11 +80,28 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
 
     android.os.Handler handler = new android.os.Handler();
     SharedPreferences sharedPreferences;
+    String avatarUrl;
+    String nickname;
+    String mobile;
 
     public static void show(Activity activity) {
         Intent intent = new Intent(activity, DrawerActivity.class);
         activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         activity.startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 1001://解除绑定
+                    unbindService(mServiceConnection);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     @Override
@@ -134,8 +155,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                         return VisualBurdenViewFragment.newInstance();
                 }
             }
-
-
+            
             @Override
             public int getCount() {
                 return 3;
@@ -164,15 +184,15 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                     case 0:
 
                         return HeaderDesign.fromColorResAndDrawable(
-                                R.color.black,
+                                R.color.background_blue_deep,
                                 getResources().getDrawable(R.drawable.background_guide));
                     case 1:
                         return HeaderDesign.fromColorResAndDrawable(
-                                R.color.black,
-                                getResources().getDrawable(R.drawable.background_guide));
+                                R.color.background_blue_deep,
+                                getResources().getDrawable(R.drawable.background_drawer_center));
                     case 2:
                         return HeaderDesign.fromColorResAndDrawable(
-                                R.color.black,
+                                R.color.background_blue_deep,
                                 getResources().getDrawable(R.drawable.background_guide));
 //                    case 3:
 //                        return HeaderDesign.fromColorResAndUrl(
@@ -206,7 +226,6 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
             Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
             bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
         }
-
 
     }
 
@@ -257,35 +276,50 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void initRightLayout() {
-
-        //右边菜单
-        rightMessagelayout = (RelativeLayout) findViewById(R.id.main_right_drawer_layout);
-        View view = getLayoutInflater().inflate(R.layout.drawer_right, null);
-        view.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-        rightMessagelayout.addView(view);
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.iv_device:
-                        if (mDeviceAddress.equals("") || mDeviceName.equals("")) {
-                            ActiveActivity.show(DrawerActivity.this);
-                        } else {
-                            GlassActivity.show(DrawerActivity.this);
-                        }
-                        break;
-                    case R.id.tv_update:
-                        update();
-                        break;
-                    default:
-                        break;
+        try {
+            //右边菜单
+            rightMessagelayout = (RelativeLayout) findViewById(R.id.main_right_drawer_layout);
+            View view = getLayoutInflater().inflate(R.layout.drawer_right, null);
+            view.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+            rightMessagelayout.addView(view);
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    switch (v.getId()) {
+                        case R.id.iv_device:
+                            if (mDeviceAddress.equals("") || mDeviceName.equals("")) {
+                                ActiveActivity.show(DrawerActivity.this);
+                            } else {
+                                GlassActivity.show(DrawerActivity.this);
+                            }
+                            break;
+                        case R.id.tv_update:
+//                        update();
+                            step_on();
+                            break;
+                        case R.id.tv_history:
+                            getHistory();
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            }
-        };
-        view.setOnClickListener(listener);
-        view.findViewById(R.id.iv_device).setOnClickListener(listener);
-        view.findViewById(R.id.tv_update).setOnClickListener(listener);
+            };
+            view.setOnClickListener(listener);
+            view.findViewById(R.id.iv_device).setOnClickListener(listener);
+            view.findViewById(R.id.tv_update).setOnClickListener(listener);
+            view.findViewById(R.id.tv_history).setOnClickListener(listener);
+            //获取用户数据，来源MainActivity-GetMe接口
+            JSONObject jsonObject = new JSONObject(sharedPreferences.getString("user", ""));
+            String avatarUrl = jsonObject.getString("avatar");
+            String nickname = jsonObject.getString("nickname");
+            String mobile = jsonObject.getString("mobile");
 
+            TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
+            tv_name.setText(nickname + "的Akeso");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -513,8 +547,28 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
 //        mGattServicesList.setAdapter(gattServiceAdapter);
     }
 
-    private void update() {
+    private void getHistory() {
+        if (mGattCharacteristics != null) {
+            Toast.makeText(this, "获取历史数据", Toast.LENGTH_SHORT);
+            for (int i = 0; i < mGattCharacteristics.size(); i++) {
+                for (int j = 0; j < mGattCharacteristics.get(i).size(); j++) {
+                    final BluetoothGattCharacteristic characteristic =
+                            mGattCharacteristics.get(i).get(j);
+                    if (characteristic.getUuid().toString().equals(SampleGattAttributes.Characteristics_History_data_off_on)) {
+                        final int charaProp = characteristic.getProperties();
+                        if ((charaProp | BluetoothGattCharacteristic.PROPERTY_WRITE) > 0) {
+                            byte[] bytes = new byte[1];
+                            bytes[0] = 0x01;
+                            characteristic.setValue(bytes);
+                            mBluetoothLeService.writeCharacteristic(characteristic);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
+    private void update() {
         if (mGattCharacteristics != null) {
             Toast.makeText(this, "更新ing", Toast.LENGTH_SHORT);
             for (int i = 0; i < mGattCharacteristics.size(); i++) {
@@ -526,22 +580,59 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                     if (characteristic.getService().getUuid().toString().equals(SampleGattAttributes.Service_Status_information_data)) {
                         final int charaProp = characteristic.getProperties();
                         if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
-                            // If there is an active notification on a characteristic, clear
-                            // it first so it doesn't update the data field on the user interface.
-//                            if (mNotifyCharacteristic != null) {
-//                                mBluetoothLeService.setCharacteristicNotification(
-//                                        mNotifyCharacteristic, false);
-//                                mNotifyCharacteristic = null;
-//                            }
                             mBluetoothLeService.readCharacteristic(characteristic);
                         }
-//                        if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
-//                            mNotifyCharacteristic = characteristic;
-//                            mBluetoothLeService.setCharacteristicNotification(
-//                                    characteristic, true);
-//                        }
                     }
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    if (characteristic.getUuid().toString().equals(SampleGattAttributes.Characteristics_Acceleration_sensor_data_steps)) {
+//                        final int charaProp = characteristic.getProperties();
+//                        if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
+//                            mBluetoothLeService.readCharacteristic(characteristic);
+//                        }
+//                    }
 
+                }
+
+            }
+        }
+
+    }
+
+
+    private void step_on() {
+        if (mGattCharacteristics != null) {
+            Toast.makeText(this, "更新ing", Toast.LENGTH_SHORT);
+            for (int i = 0; i < mGattCharacteristics.size(); i++) {
+
+                for (int j = 0; j < mGattCharacteristics.get(i).size(); j++) {
+
+                    final BluetoothGattCharacteristic characteristic =
+                            mGattCharacteristics.get(i).get(j);
+//                    if (characteristic.getUuid().toString().equals(SampleGattAttributes.Characteristics_Acceleration_sensor_data_steps)) {
+//                        final int charaProp = characteristic.getProperties();
+//                        if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
+//                            byte[] bytes = new byte[1];
+//                            bytes[0] = 0x01;
+//                            characteristic.setValue(bytes);
+//                            mBluetoothLeService.writeCharacteristic(characteristic);
+//                            Log.e("open","打开了计步");
+//                        }
+//                    }
+                    if (characteristic.getUuid().toString().equals(SampleGattAttributes.Characteristics_Acceleration_sensor_data_steps)) {
+                        final int charaProp = characteristic.getProperties();
+                        if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mBluetoothLeService.readCharacteristic(characteristic);
+                                }
+                            }, 500);
+                        }
+                    }
                 }
 
             }
@@ -566,26 +657,25 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
                     Log.e("信息", " 电量：" + data.getData()[0] + " 各个状态： " + data.getData()[1]);
                     sharedPreferences.edit().putString("battery", data.getData()[0] + "").commit();
                 } else if (data.getUuid().equals(SampleGattAttributes.Characteristics_Ultraviolet_light_sensor_data)) {
-//                    int lux = 0;
-//                    if ((data.getData()[1] << 8 | data.getData()[2]) < 0) {
-//                        lux = (data.getData()[1] << 8 | data.getData()[2]) + 256;
-//                    } else {
-//                        lux = (data.getData()[1] << 8 | data.getData()[2]);
-//                    }
                     Log.e("信息", " UV：" + data.getData()[0] + " 光强： " + byteToInt(data.getData()[1]) + byteToInt(data.getData()[2]));
                     getIntent().putExtra("light", byteToInt(data.getData()[1]) + byteToInt(data.getData()[2]) + "/" + data.getData()[0]);
                 } else if (data.getUuid().equals(SampleGattAttributes.Characteristics_Temperature_and_humidity_sensor_data)) {
                     Log.e("信息", " 温度：" + data.getData()[0] + " 湿度： " + data.getData()[1]);
                     getIntent().putExtra("humidity", data.getData()[1] + "");
                     update();
-
                 } else if (data.getUuid().equals(SampleGattAttributes.Characteristics_Acceleration_sensor_data)) {
                     Log.e("信息", " 加速度：" + data.getData()[0] + " x轴：" + byteToInt(data.getData()[1]) + byteToInt(data.getData()[2]) + " y轴" +
                             "" + byteToInt(data.getData()[3]) + byteToInt(data.getData()[4]) + "" +
                             " z轴：" + byteToInt(data.getData()[5]) + byteToInt(data.getData()[6]) + " 角度值：" + byteToInt(data.getData()[7]));
                     getIntent().putExtra("neck", data.getData()[0] + "");
                     getIntent().putExtra("angle", data.getData()[7] + "");
-
+                } else if (data.getUuid().toString().equals(SampleGattAttributes.Characteristics_Acceleration_sensor_data_steps)) {
+                    Log.e("信息", "步数：" + (byteToInt(data.getData()[0]) * (255 ^ 2) + byteToInt(data.getData()[1]) * 255 + byteToInt(data.getData()[2])) + "  " + byteToInt(data.getData()[0]) + byteToInt(data.getData()[1]) + byteToInt(data.getData()[2]));
+                } else if (data.getUuid().toString().equals(SampleGattAttributes.Characteristics_History_data)) {
+                    Log.e("信息", "温度：" + data.getData()[0] + " 湿度：" + data.getData()[1] + " UV：" + data.getData()[2] + " " +
+                            "光强：" + (byteToInt(data.getData()[3]) * 255 + byteToInt(data.getData()[4])) + " 低头抬头状态：" + data.getData()[5] + "" +
+                            " 眼镜角度：" + data.getData()[6] + " 年：" + data.getData()[7] + " 月：" + data.getData()[8] + " 日：" + data.getData()[9] + " 小时：" + data.getData()[10] + "" +
+                            " 分钟： " + data.getData()[11] + " 秒： " + data.getData()[12] + " 记录位置： " + data.getData()[13] + " 记录数量 " + data.getData()[14]);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

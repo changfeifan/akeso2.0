@@ -15,6 +15,16 @@ public class ViewInfo {
     String timeInfo = "暂无更新";
     String data = "暂无";
     int background_color = R.color.text_gray;
+    String time_in="";
+
+    public String getTime_in() {
+        return time_in;
+    }
+
+    public void setTime_in(String time_in) {
+        this.time_in = time_in;
+    }
+
 
     public int getFace() {
         return face;
@@ -94,6 +104,7 @@ public class ViewInfo {
         jsonObject.put("background_color", getBackground_color());
         jsonObject.put("type", getType());
         jsonObject.put("face", getFace());
+        jsonObject.put("time_in",getTime_in());
         return jsonObject;
     }
 
@@ -107,6 +118,7 @@ public class ViewInfo {
         info.background_color = jsonObject.optInt("background_color", R.color.background_gray);
         info.type = jsonObject.optInt("type", 1);
         info.face = jsonObject.optInt("face", 1);
+        info.time_in = jsonObject.optString("time_in","");
         return info;
     }
 }

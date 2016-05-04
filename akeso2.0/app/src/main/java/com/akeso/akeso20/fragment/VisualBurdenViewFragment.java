@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,9 @@ import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapte
 
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by florentchampigny on 24/04/15.
@@ -35,6 +37,9 @@ public class VisualBurdenViewFragment extends Fragment {
     private ViewInfo viewInfo_eyestrain = new ViewInfo();
     private ViewInfo viewInfo_time = new ViewInfo();
     Handler handler = new Handler();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+
     private TestRecyclerViewAdapter testRecyclerViewAdapter;
 
     public static VisualBurdenViewFragment newInstance() {
@@ -68,17 +73,18 @@ public class VisualBurdenViewFragment extends Fragment {
 
     public JSONArray baseDate() {
         viewInfo_accomodation.setTitle(getString(R.string.title_accomodation));
-        viewInfo_accomodation.setBackground_color(R.color.blue_light);
+        viewInfo_accomodation.setBackground_color(R.color.green_light);
         viewInfo_eyestrain.setTitle(getString(R.string.title_eyestrain));
         viewInfo_eyestrain.setBackground_color(R.color.red_light);
         viewInfo_time.setTitle(getString(R.string.title_time));
         viewInfo_time.setBackground_color(R.color.yellow_light);
+        viewInfo_time.setType(3);
         try {
             array.put(viewInfo_accomodation.getJsonObject());
-//            array.put(viewInfo_eyestrain.getJsonObject());
             array.put(viewInfo_time.getJsonObject());
+            array.put(viewInfo_eyestrain.getJsonObject());
 
-            array.getJSONObject(2).put("content", "为了更好的保护我们的眼健康，我们需要适当去户外走动，吸收阳光。保证每天" + Html.fromHtml("<font color='#ffc437'>过度湿润</font>") + "的户外时间是良好的开始");
+            array.getJSONObject(1).put("content", "为了更好地保护眼睛，每天需要保证2小时的户外活动时间。");
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -106,21 +112,42 @@ public class VisualBurdenViewFragment extends Fragment {
 
     public void reset(String str1, String str2) {
         try {
+            long l = System.currentTimeMillis() - 5965000;
+            Date date = new Date(l);
+            int hour = date.getHours();
+            int min = date.getMinutes();
+            int sec = date.getSeconds();
+
+            array.getJSONObject(1).put("time_in", hour + "小时" + min + "分" + sec + "秒");
+            array.getJSONObject(1).put("content", "为了更好的保护我们的眼健康，我们需要适当去户外走动，吸收阳光。保证每天2小时的户外时间是良好的开始。");
+            testRecyclerViewAdapter.setArray(array);
+            mAdapter.notifyDataSetChanged();
+
+
 //            array.getJSONObject(0).put("data", str2 + "%");
-            int angle = Integer.valueOf(str1);
-            if (angle >= 0 && angle <= 5) {
-                array.getJSONObject(0).put("data", "0.25-0.5D");
-                array.getJSONObject(0).put("content", "当前你所使用的调节力良好，状态放松，请继续保持给您的眼镜一个放松的状态。");
-                array.getJSONObject(0).put("face",1);
-            } else if (angle > 5 && angle <= 15) {
-                array.getJSONObject(0).put("data", "0.5-1D");
-                array.getJSONObject(0).put("content", "根据您的预估调节力，您当前正在电脑前工作，建议您工作1小时候眺望远方，并起身运动。");
-                array.getJSONObject(0).put("face",2);
-            } else {
-                array.getJSONObject(0).put("data", "2-3D");
-                array.getJSONObject(0).put("content", "您当前可能是在低头写字、阅读或使用手机，建议您20分钟后休息20秒并眺望20米以外的物体。");
-                array.getJSONObject(0).put("face",2);
+            if (str1 != null && !str1.equals("暂无") ) {
+                int angle = Integer.valueOf(str1);
+                if (angle >= 0 && angle <= 5) {
+                    array.getJSONObject(0).put("data", "0.25-0.5D");
+                    array.getJSONObject(0).put("content", "当前眼睛状态放松，请继续保持。");
+                    array.getJSONObject(0).put("face", 1);
+                    array.getJSONObject(0).put("timeInfo", "0.25-0.5D");
+
+                } else if (angle > 5 && angle <= 15) {
+                    array.getJSONObject(0).put("data", "0.5-1D");
+                    array.getJSONObject(0).put("content", "当前处于近距离工作状态，建议工作1小时后闭眼休息5分钟，同时做眼保健操，帮助眼周血液循环.");
+                    array.getJSONObject(0).put("face", 2);
+                    array.getJSONObject(0).put("timeInfo", "0.5-1D");
+
+                } else {
+                    array.getJSONObject(0).put("data", "2-3D");
+                    array.getJSONObject(0).put("content", "当前眼睛负担较高，建议工作30分钟后闭眼休息5分钟，同时做眼保健操，帮助眼周血液循环，并远眺10分钟帮助眼睛放松。");
+                    array.getJSONObject(0).put("face", 2);
+                    array.getJSONObject(0).put("timeInfo", "2-3D");
+
+                }
             }
+
 
             testRecyclerViewAdapter.setArray(array);
             mAdapter.notifyDataSetChanged();

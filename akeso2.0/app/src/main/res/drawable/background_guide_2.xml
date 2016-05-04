@@ -4,7 +4,7 @@
         android:angle="315"
         android:endColor="@color/background_blue_deep"
         android:centerColor="@color/background_blue_deep"
-        android:startColor="@color/background_blue_deep" />
+        android:startColor="@color/background_blue_light" />
     <!--<gradient-->
         <!--android:angle="315"-->
         <!--android:endColor="#1d1e28"-->

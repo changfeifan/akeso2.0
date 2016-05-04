@@ -68,6 +68,7 @@ public class SampleGattAttributes {
     public static final String Service_History_data = "0000ffe0-0000-1000-8000-00805f9b34fb";
     // 特征UUID‐‐‐‐‐‐‐‐‐‐‐‐ 0xFFE1
     public static final String Characteristics_History_data = "0000ffe1-0000-1000-8000-00805f9b34fb";
+    public static final String Characteristics_History_data_off_on = "0000ffe2-0000-1000-8000-00805f9b34fb";
 
     static {
         // Sample Services.

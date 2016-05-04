@@ -11,6 +11,8 @@
     <color name="yellow_light">#ffc437</color>
     <color name="black">#000</color>
     <color name="white">#fff</color>
+    <color name="white_process">#afffffff</color>
+
     <color name="background_gray">#fafafa</color>
     <color name="text_gray">#9b9b9b</color>
     <color name="line_gray">#f0f0f0</color>
@@ -18,4 +20,6 @@
     <color name="blue_deep">#117fc2</color>
     <color name="text_selected">#888</color>
     <color name="text_black">#4a4a4a</color>
+    <color name="background_blue_deep">#1f2738</color>
+    <color name="background_blue_light">#324265</color>
 </resources>

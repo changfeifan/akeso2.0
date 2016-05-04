@@ -70,7 +70,6 @@ public class BluetoothLeService extends Service {
             UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
 
 
-
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
@@ -123,18 +122,57 @@ public class BluetoothLeService extends Service {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
                 Log.w(TAG, "onServicesDiscovered complete! ");
-
+                if (gatt.getService(UUID.fromString(SampleGattAttributes.Service_Acceleration_sensor_data)) != null) {
+//                    gatt.setCharacteristicNotification(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Acceleration_sensor_data))
+//                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Acceleration_sensor_data)), true);
+                    Log.i(TAG, "找到加速度服务。");
+//                    readCharacteristic(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Acceleration_sensor_data))
+//                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Acceleration_sensor_data)));
+//
+                    BluetoothGattCharacteristic characteristic = gatt.getService(UUID.fromString(SampleGattAttributes.Service_Acceleration_sensor_data))
+                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Acceleration_sensor_data_off_on));
+                    byte[] bytes = new byte[1];
+                    bytes[0] = 0x01;
+                    characteristic.setValue(bytes);
+//                    characteristic.setValue();
+                    gatt.writeCharacteristic(characteristic);
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+//                if (gatt.getService(UUID.fromString(SampleGattAttributes.Service_History_data)) != null) {
+////                    gatt.setCharacteristicNotification(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Acceleration_sensor_data))
+////                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Acceleration_sensor_data)), true);
+//                    Log.i(TAG, "找到数据记录服务。");
+////                    readCharacteristic(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Acceleration_sensor_data))
+////                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Acceleration_sensor_data)));
+////
+//                    BluetoothGattCharacteristic characteristic = gatt.getService(UUID.fromString(SampleGattAttributes.Service_History_data))
+//                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_History_data_off_on));
+//                    byte[] bytes = new byte[1];
+//                    bytes[0] = 0x01;
+//                    characteristic.setValue(bytes);
+////                    characteristic.setValue();
+//                    gatt.writeCharacteristic(characteristic);
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
                 if (gatt.getService(UUID.fromString(SampleGattAttributes.Service_Temperature_and_humidity_sensor_data)) != null) {
                     gatt.setCharacteristicNotification(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Temperature_and_humidity_sensor_data))
                             .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Temperature_and_humidity_sensor_data)), true);
                     Log.i(TAG, "找到温湿度服务。");
                     readCharacteristic(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Temperature_and_humidity_sensor_data))
                             .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Temperature_and_humidity_sensor_data)));
-                }
-                try {
-                    Thread.sleep(1500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 if (gatt.getService(UUID.fromString(SampleGattAttributes.Service_Status_information_data)) != null) {
 //                    gatt.setCharacteristicNotification(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Status_information_data))
@@ -151,19 +189,44 @@ public class BluetoothLeService extends Service {
                     readCharacteristic(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Ultraviolet_light_sensor_data))
                             .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Ultraviolet_light_sensor_data)));
                 }
+
                 if (gatt.getService(UUID.fromString(SampleGattAttributes.Service_Acceleration_sensor_data)) != null) {
                     gatt.setCharacteristicNotification(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Acceleration_sensor_data))
                             .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Acceleration_sensor_data)), true);
                     Log.i(TAG, "找到加速度服务。");
-                    readCharacteristic(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Acceleration_sensor_data))
-                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Acceleration_sensor_data)));
+//                    writeCharateristic(gatt.getService(UUID.fromString(SampleGattAttributes.Service_Acceleration_sensor_data))
+//                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_Acceleration_sensor_data_off_on)));
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-
-
-
+                //数据记录通知
+                if (gatt.getService(UUID.fromString(SampleGattAttributes.Service_History_data)) != null) {
+                    gatt.setCharacteristicNotification(gatt.getService(UUID.fromString(SampleGattAttributes.Service_History_data))
+                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_History_data)), true);
+                    Log.i(TAG, "找到数据记录服务。");
+//                    readCharacteristic(gatt.getService(UUID.fromString(SampleGattAttributes.Service_History_data))
+//                            .getCharacteristic(UUID.fromString(SampleGattAttributes.Characteristics_History_data)));
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
 
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);
+            }
+        }
+
+        @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic,
+                                          int status) {
+            super.onCharacteristicWrite(gatt, characteristic, status);
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
             }
         }
 
@@ -226,6 +289,8 @@ public class BluetoothLeService extends Service {
         }
         sendBroadcast(intent);
     }
+
+
 
     public class LocalBinder extends Binder {
         BluetoothLeService getService() {
@@ -354,6 +419,11 @@ public class BluetoothLeService extends Service {
             return;
         }
         mBluetoothGatt.readCharacteristic(characteristic);
+    }
+
+
+    public void writeCharacteristic(BluetoothGattCharacteristic characteristic) {
+        mBluetoothGatt.writeCharacteristic(characteristic);
     }
 
     /**

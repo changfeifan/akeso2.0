@@ -72,7 +72,7 @@ public class VisualHabitViewFragment extends Fragment {
 
         try {
             array.put(viewInfo_neck.getJsonObject());
-//            array.put(viewInfo_neckstrain.getJsonObject());
+            array.put(viewInfo_neckstrain.getJsonObject());
             array.put(viewInfo_null.getJsonObject());
 
         } catch (JSONException e) {
@@ -91,8 +91,9 @@ public class VisualHabitViewFragment extends Fragment {
         public void run() {
             try {
                 handler.postDelayed(this, 1000);
-               if (getActivity().getIntent().getStringExtra("neck") != null && getActivity().getIntent().getStringExtra("angle") != null)
-                    reset(getActivity().getIntent().getStringExtra("neck"), getActivity().getIntent().getStringExtra("angle"));
+                if (getActivity().getIntent() != null)
+                    if (getActivity().getIntent().getStringExtra("neck") != null && getActivity().getIntent().getStringExtra("angle") != null)
+                        reset(getActivity().getIntent().getStringExtra("neck"), getActivity().getIntent().getStringExtra("angle"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -105,19 +106,25 @@ public class VisualHabitViewFragment extends Fragment {
                 return;
             }
             viewInfo_neck.setData(angle + "°");
-            array.getJSONObject(0).put("data", angle + '°');
+//            array.getJSONObject(0).put("data", angle + '°');
             if (str.equals("96")) {
                 array.getJSONObject(0).put("content", "目前状态良好，请继续保持");
-                array.getJSONObject(0).put("face",1);
-                array.getJSONObject(0).put("timeInfo", "良好");
+                array.getJSONObject(0).put("face", 1);
+                array.getJSONObject(0).put("timeInfo", angle + '°');
+                array.getJSONObject(0).put("data", "良好");
+
             } else if (str.equals("97")) {
                 array.getJSONObject(0).put("content", "请您在工作和学习时注意坐姿，尽量减少低头的角度和时间，并在工作1h后，活动颈部肌肉。");
-                array.getJSONObject(0).put("face",2);
-                array.getJSONObject(0).put("timeInfo", "适宜");
+                array.getJSONObject(0).put("face", 2);
+                array.getJSONObject(0).put("timeInfo", angle + '°');
+                array.getJSONObject(0).put("data", "适宜");
+
             } else if (str.equals("98")) {
                 array.getJSONObject(0).put("content", "当前用眼弧度过高，请您调整坐姿，为避免过度使用，建议工作30分钟后，活动颈部肌肉。");
-                array.getJSONObject(0).put("face",2);
-                array.getJSONObject(0).put("timeInfo", "不良");
+                array.getJSONObject(0).put("face", 2);
+                array.getJSONObject(0).put("timeInfo", angle + '°');
+                array.getJSONObject(0).put("data", "适宜");
+
 
             } else {
                 viewInfo_neck.setData("暂无");

@@ -79,8 +79,8 @@ public class TestRecyclerViewAdapter extends RecyclerView.Adapter<TestRecyclerVi
                 };
             case 3:
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.list_item_card_big_2, parent, false);
-                view.findViewById(R.id.rl_background_top).setBackgroundColor(parent.getResources().getColor(R.color.yellow_light));
+                        .inflate(R.layout.list_item_card_big_time, parent, false);
+                view.findViewById(R.id.rl_background_top).setBackgroundColor(parent.getResources().getColor(info.getBackground_color()));
                 return new TestRecyclerViewHolder(view) {
                 };
             case 4:
@@ -128,6 +128,7 @@ public class TestRecyclerViewAdapter extends RecyclerView.Adapter<TestRecyclerVi
         TextView tv_content;
         ImageView iv_face;
         WaveView waveView;
+        TextView tv_time_indoor;
 
         public TestRecyclerViewHolder(View itemView) {
             super(itemView);
@@ -149,6 +150,8 @@ public class TestRecyclerViewAdapter extends RecyclerView.Adapter<TestRecyclerVi
             waveView.setBorder(mBorderWidth, mBorderColor);
 
             mWaveHelper.start();
+
+
         }
 
         public void setData(JSONObject object) {
@@ -162,9 +165,12 @@ public class TestRecyclerViewAdapter extends RecyclerView.Adapter<TestRecyclerVi
             } else if (info.getFace() == 1) {
                 iv_face.setImageResource(R.drawable.ic_card_well);
             } else {
-                iv_face.setImageResource(R.drawable.ic_card_bad);
+                iv_face.setImageResource(R.drawable.ic_card_cry);
             }
-
+            if (info.getType()==3){
+                tv_time_indoor=(TextView)itemView.findViewById(R.id.tv_time_in);
+                tv_time_indoor.setText(info.getTime_in());
+            }
 
 
         }
